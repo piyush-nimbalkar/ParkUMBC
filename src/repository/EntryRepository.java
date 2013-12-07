@@ -1,6 +1,9 @@
 package repository;
 
+import java.util.List;
+
 import model.Entry;
+import model.ParkingLot;
 import storage.DataStorage;
 import storage.ServerStorage;
 import android.content.Context;
@@ -23,5 +26,9 @@ public class EntryRepository {
 	
 	    public Entry getEntry() {
 	        return dataStorage.getEntryDetails();
-	    }	    
+	    }	
+	    
+	    public List<ParkingLot> getParkingLots() {
+	        return dataStorage.getParkingLots();
+	    }
 }
