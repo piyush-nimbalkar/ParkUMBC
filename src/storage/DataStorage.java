@@ -17,23 +17,27 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String DB_NAME = "parking.db";
     private static final String LATITUDE_COLUMN = "latitude";
     private static final String LONGITUDE_COLUMN = "longitude";
-    private Context context;
+    private static final String PARKING_LOT_ID_COLUMN = "parking_lot_id";
+    private static final String IS_PARKED_COLUMN = "is_parked";
 
     public DataStorage(Context context) {
         super(context, DB_NAME, null, 1);
-        this.context = context;
     }
 
     private static final String DATABASE_CREATE = "CREATE TABLE " + TABLE_NAME + " (" +
             _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             LATITUDE_COLUMN + " TEXT, " +
-            LONGITUDE_COLUMN + " TEXT );";
+            LONGITUDE_COLUMN + " TEXT, " +
+            PARKING_LOT_ID_COLUMN + " TEXT , " + 
+            IS_PARKED_COLUMN + " TEXT );";
 
-    public void store(Entry issue) {
+    public void store(Entry entry) {
         SQLiteDatabase db = getWritableDatabase();
-        SQLiteStatement statement = db.compileStatement("insert into " + TABLE_NAME + " (" + LATITUDE_COLUMN + "," + LONGITUDE_COLUMN + ") values ( ?, ? )");
-        statement.bindDouble(1, issue.getLatitude());
-        statement.bindDouble(2, issue.getLongitude());
+        SQLiteStatement statement = db.compileStatement("insert into " + TABLE_NAME + " (" + LATITUDE_COLUMN + "," + LONGITUDE_COLUMN + "," + PARKING_LOT_ID_COLUMN + "," + IS_PARKED_COLUMN + ") values ( ?, ?, ?, ? )");
+        statement.bindDouble(1, entry.getLatitude());
+        statement.bindDouble(2, entry.getLongitude());
+        statement.bindLong(3, entry.getParkingLotId());
+        statement.bindLong(4, entry.getParkingStatus());
         statement.executeInsert();
     }
 
@@ -55,7 +59,9 @@ public class DataStorage extends SQLiteOpenHelper {
                 do {
                 	double latitude = c.getDouble(c.getColumnIndex(LATITUDE_COLUMN));
                 	double longitude = c.getDouble(c.getColumnIndex(LONGITUDE_COLUMN));
-                    Entry entry = new Entry(latitude, longitude);
+                	long parking_lot_id = c.getLong(c.getColumnIndex(PARKING_LOT_ID_COLUMN));
+                	long is_parked = c.getLong(c.getColumnIndex(IS_PARKED_COLUMN));
+                    Entry entry = new Entry(latitude, longitude, parking_lot_id, is_parked);
                     entries.add(entry);
                 } while (c.moveToNext());
             }
@@ -67,13 +73,16 @@ public class DataStorage extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
         double latitude, longitude;
+        long parking_lot_id, is_parked;
         Entry entry = null;
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
                     latitude = c.getDouble(c.getColumnIndex(LATITUDE_COLUMN));
                     longitude = c.getDouble(c.getColumnIndex(LONGITUDE_COLUMN));
-                    entry = new Entry(latitude, longitude);
+                	parking_lot_id = c.getLong(c.getColumnIndex(PARKING_LOT_ID_COLUMN));
+                	is_parked = c.getLong(c.getColumnIndex(IS_PARKED_COLUMN));
+                    entry = new Entry(latitude, longitude, parking_lot_id, is_parked);
                 } while (c.moveToNext());
             }
         }

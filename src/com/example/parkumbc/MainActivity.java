@@ -14,7 +14,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 //import android.content.Intent;
 
@@ -42,14 +41,20 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View arg0) {        
                 gps = new GPSTracker(MainActivity.this);
-                if(gps.canGetLocation()){
+                if (gps.canGetLocation()) {
                     double latitude = gps.getLatitude();
                     double longitude = gps.getLongitude();
+                    Button ToggleButton = (Button) findViewById(R.id.button1);
                     
-                    Toast.makeText(getApplicationContext(), "Latitude: " + latitude + "\nLongitude: " + longitude, Toast.LENGTH_LONG).show();
-                    entryRepository.createEntry(latitude, longitude);
-                    Entry entry = entryRepository.getEntry();
-                    Toast.makeText(getApplicationContext(), "DB Latitude: " + entry.getLatitude() + "\nDB Longitude: " + entry.getLongitude(), Toast.LENGTH_LONG).show();
+                    if(ToggleButton.getText() == "Park"){
+                        entryRepository.createEntry(latitude, longitude, 1, 1);
+                    	ToggleButton.setText("Checkout");
+                        Toast.makeText(getApplicationContext(), "Thank you for making UMBC better! :-)", 1).show();
+                    } else {
+                        entryRepository.createEntry(latitude, longitude, 1, 0);
+                    	ToggleButton.setText("Park");
+                        Toast.makeText(getApplicationContext(), "Have a safe ride! :-)", 1).show();
+                    }
                 } else {
                     gps.showSettingsAlert();
                 }
@@ -59,13 +64,18 @@ public class MainActivity extends FragmentActivity {
 
     private void addMarkers(GoogleMap map) {
         map.addMarker(new MarkerOptions()
-		        .position(new LatLng(39.255, -76.710))
+		        .position(new LatLng(39.2549, -76.71073))
 		        .title("Hello world"));
         PolygonOptions rectOptions = new PolygonOptions()
-		        .add(new LatLng(39.2535666, -76.7093),
-		             new LatLng(39.2527, -76.708616),
-		             new LatLng(39.2545666, -76.70635),
-		             new LatLng(39.254916667, -76.707533333));
+		        .add(new LatLng(39.25531666, -76.71158333),
+		        new LatLng(39.255, -76.710483333),
+		        new LatLng(39.254633333, -76.710666667),
+		        new LatLng(39.254616667, -76.710766667),
+		        new LatLng(39.2545, -76.7109),
+		        new LatLng(39.2544, -76.710983333),
+		        new LatLng(39.254483333, -76.71125),
+		        new LatLng(39.2549, -76.711016667),
+		        new LatLng(39.2551, -76.7116));
         map.addPolygon(rectOptions);
 	}
 
