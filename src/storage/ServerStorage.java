@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -13,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 public class ServerStorage extends AsyncTask<String, Void, String> {
 
@@ -48,6 +50,7 @@ public class ServerStorage extends AsyncTask<String, Void, String> {
                 HttpEntity httpEntity = httpResponse.getEntity();
                 InputStream content = httpEntity.getContent();
                 result = toString(content);
+                Log.d("taggggg", result);
             }
         } catch (IOException httpResponseError) {
               Log.e("HTTP Response", "IO error");
