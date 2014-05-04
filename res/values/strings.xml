@@ -4,6 +4,7 @@
     <string name="app_name">ParkUMBC</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="park_button">Park</string>
+    <string name="park">Park</string>
+    <string name="checkout">Checkout</string>
 	<string name="view_parking_button">View Parking Lot</string>
 </resources>

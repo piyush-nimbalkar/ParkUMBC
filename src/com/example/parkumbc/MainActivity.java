@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
+    private static final int THRESHOLD = 1;
     private Context context;
 
     private GoogleMap map;
@@ -25,7 +26,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private Button btnShowLocation;
     private EntryRepository entryRepository;
-    int threshold = 2;
+    private int current_count = 0;
 
     double coord[][][] = {{{39.25531666, -76.71158333},
             {39.255, -76.710483333},
@@ -116,20 +117,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             double longitude = locationTracker.getLongitude();
             Button toggleButton = (Button) findViewById(R.id.toggleButton);
 
-            if (toggleButton.getText() == "Park") {
+            if (toggleButton.getText() == getString(R.string.park)) {
                 entryRepository.createEntry(latitude, longitude, 1, true);
-                toggleButton.setText("Checkout");
+                toggleButton.setText(getString(R.string.checkout));
                 Toast.makeText(getApplicationContext(), "Thank you for making UMBC better! :-)", Toast.LENGTH_SHORT).show();
-                threshold += 1;
+                current_count += 1;
             } else {
                 entryRepository.createEntry(latitude, longitude, 1, false);
-                toggleButton.setText("Park");
+                toggleButton.setText(getString(R.string.park));
                 Toast.makeText(getApplicationContext(), "Have a safe ride! :-)", Toast.LENGTH_SHORT).show();
-                threshold -= 1;
-//                        calculateClosest();
+                current_count -= 1;
+//                calculateClosest();
             }
 
-            if (threshold <= 1) {
+            if (current_count < THRESHOLD) {
                 map.clear();
                 addPolgons();
                 map.addMarker(new MarkerOptions()

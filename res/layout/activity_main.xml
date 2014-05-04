@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/map"
         android:layout_alignRight="@+id/map"
-        android:text="@string/park_button" />
+        android:text="@string/park" />
     <!-- android:onClick="changeState" /> -->
 
     <fragment
