@@ -1,17 +1,21 @@
 package repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.util.Log;
 import model.Entry;
+import model.LatLong;
 import model.ParkingLot;
 import storage.DataStorage;
 import storage.ServerStorage;
 import android.content.Context;
 
 public class EntryRepository {
-    private DataStorage dataStorage;
+
+    private static final String TAG = "ENTRY";
     private final Context context;
+    private DataStorage dataStorage;
 
     public EntryRepository(Context _context) {
         context = _context;
@@ -30,6 +34,16 @@ public class EntryRepository {
     }
 
     public List<ParkingLot> getParkingLots() {
-        return dataStorage.getParkingLots();
+        List<ParkingLot> parking_lots = dataStorage.getParkingLots();
+
+        for (ParkingLot lot : parking_lots) {
+            Log.d(TAG, lot.getLotName());
+            ArrayList<LatLong> corners = lot.getCorners();
+            Log.d(TAG, String.valueOf(corners.size()));
+            for (int i = 0; i < corners.size(); i++) {
+                Log.d(TAG, String.valueOf(corners.get(i).getLatitude()) + ", " + String.valueOf(corners.get(i).getLongitude()));
+            }
+        }
+        return parking_lots;
     }
 }

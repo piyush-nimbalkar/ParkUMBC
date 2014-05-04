@@ -49,9 +49,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(39.255, -76.710), 15));
 
+        entryRepository = new EntryRepository(getApplicationContext());
         addMarkers();
         addPolgons();
-        entryRepository = new EntryRepository(getApplicationContext());
 
         btnShowLocation = (Button) findViewById(R.id.toggleButton);
         btnShowLocation.setOnClickListener(this);
@@ -67,16 +67,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void addPolgons() {
+        entryRepository.getParkingLots();
         PolygonOptions rectOptions = new PolygonOptions()
-                .add(new LatLng(39.25531666, -76.71158333),
-                        new LatLng(39.255, -76.710483333),
-                        new LatLng(39.254633333, -76.710666667),
-                        new LatLng(39.254616667, -76.710766667),
-                        new LatLng(39.2545, -76.7109),
-                        new LatLng(39.2544, -76.710983333),
-                        new LatLng(39.254483333, -76.71125),
-                        new LatLng(39.2549, -76.711016667),
-                        new LatLng(39.2551, -76.7116));
+                .add(new LatLng(39.25531666, -76.71158333))
+                .add(new LatLng(39.255, -76.710483333))
+                .add(new LatLng(39.254633333, -76.710666667))
+                .add(new LatLng(39.254616667, -76.710766667))
+                .add(new LatLng(39.2545, -76.7109))
+                .add(new LatLng(39.2544, -76.710983333))
+                .add(new LatLng(39.254483333, -76.71125))
+                .add(new LatLng(39.2549, -76.711016667))
+                .add(new LatLng(39.2551, -76.7116));
         map.addPolygon(rectOptions.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
 
         PolygonOptions Transit = new PolygonOptions()
