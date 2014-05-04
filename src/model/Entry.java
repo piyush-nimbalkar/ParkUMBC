@@ -1,12 +1,12 @@
 package model;
 
 public class Entry {
-	private double latitude;
-	private double longitude;
-	private long parking_lot_id;
-	private long is_parked;
+    private double latitude;
+    private double longitude;
+    private long parking_lot_id;
+    private boolean is_parked;
 
-    public Entry(double latitude, double longitude, long parking_lot_id, long is_parked) {
+    public Entry(double latitude, double longitude, long parking_lot_id, boolean is_parked) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.parking_lot_id = parking_lot_id;
@@ -25,7 +25,7 @@ public class Entry {
         return parking_lot_id;
     }
 
-    public long getParkingStatus() {
+    public boolean getParkingStatus() {
         return is_parked;
     }
 }

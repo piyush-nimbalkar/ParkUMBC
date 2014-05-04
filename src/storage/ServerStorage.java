@@ -20,7 +20,7 @@ import org.apache.http.message.BasicNameValuePair;
 public class ServerStorage extends AsyncTask<String, Void, ServerResponse> {
 
     private long parking_lot_id;
-    private long is_parked;
+    private boolean is_parked;
 
     @Override
     protected void onPreExecute() {
@@ -32,7 +32,7 @@ public class ServerStorage extends AsyncTask<String, Void, ServerResponse> {
         ServerResponse serverResponse = null;
         String base_url = "http://mpss.csce.uark.edu/~devan/";
 
-        String url = base_url + ((is_parked == 1) ? "park.php" : "checkout.php");
+        String url = base_url + (is_parked ? "park.php" : "checkout.php");
 
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(url);
@@ -64,7 +64,7 @@ public class ServerStorage extends AsyncTask<String, Void, ServerResponse> {
         Log.d("SERVER", response.getMessage());
     }
 
-    public void store(long parking_lot_id, long is_parked) {
+    public void store(long parking_lot_id, boolean is_parked) {
         this.parking_lot_id = parking_lot_id;
         this.is_parked = is_parked;
         execute();
