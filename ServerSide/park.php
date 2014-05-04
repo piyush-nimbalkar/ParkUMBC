@@ -28,18 +28,35 @@ if(!table_exists("parking_lot")) {
     die('Oops we are not in production currently!');
 }
 
+$sql = "SELECT * from parking_lot where LotId = $lot_id";
+
+$result = mysql_query($sql, $connection);
+
+if(!$result or mysql_numrows($result) == 0) {
+    header("HTTP/1.0 400 Bad Request");
+    die("Invalid parking lot.");
+}
+
+$capacity = mysql_result($result, 0, "Capacity");
+$current_count = mysql_result($result, 0, "CurrentCount");
+
+if($capacity <= $current_count) {
+    header("HTTP/1.0 400 Bad Request");
+    die("The parking lot is already full.");
+}
+
 $sql = "UPDATE parking_lot SET CurrentCount = CurrentCount + 1 where LotId = $lot_id";
 
 $result = mysql_query($sql, $connection);
 
 if(!$result) {
     header("HTTP/1.0 400 Bad Request");
-    die("The parking lot does not exist.");
+    die("Could not update the parking lot.");
 }
 
 mysql_close($connection);
 
-print("Successfully updated the current capacity.");
+print "Successfully updated the current capacity.";
 
 function table_exists($tablename, $database = false) {
     if(!$database) {
