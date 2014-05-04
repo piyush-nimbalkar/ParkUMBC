@@ -25,6 +25,7 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
     private static final String COLUMN_IS_PARKED = "is_parked";
+    private static final String COLUMN_LOT_NAME = "name";
     private static final String COLUMN_CURRENT_COUNT = "current_count";
     private static final String COLUMN_CAPACITY = "capacity";
     private static final String COLUMN_CORNER_INDEX = "corner_index";
@@ -40,6 +41,7 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String CREATE_PARKING_LOT_TABLE = "CREATE TABLE " +
             TABLE_PARKING_LOT + " (" +
             COLUMN_PARKING_LOT_ID + " INTEGER PRIMARY KEY, " +
+            COLUMN_LOT_NAME + " VARCHAR(200), " +
             COLUMN_CURRENT_COUNT + " TEXT, " +
             COLUMN_CAPACITY + " TEXT );";
 
@@ -61,8 +63,17 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String INSERT_PARKING_LOT = "INSERT INTO " +
             TABLE_PARKING_LOT + " (" +
             COLUMN_PARKING_LOT_ID + "," +
+            COLUMN_LOT_NAME + "," +
             COLUMN_CURRENT_COUNT + "," +
-            COLUMN_CAPACITY + ") VALUES (?, ?, ?)";
+            COLUMN_CAPACITY + ") VALUES (?, ?, ?, ?)";
+
+    private static final String INSERT_CORNER = "INSERT INTO " +
+            TABLE_CORNER + " (" +
+            COLUMN_PARKING_LOT_ID + "," +
+            COLUMN_LATITUDE + "," +
+            COLUMN_LONGITUDE + "," +
+            COLUMN_CORNER_INDEX + ") VALUES (?, ?, ?, ?)";
+
 
     public DataStorage(Context context) {
         super(context, DB_NAME, null, 1);
@@ -73,6 +84,7 @@ public class DataStorage extends SQLiteOpenHelper {
         db.execSQL(CREATE_ENTRY_TABLE);
         db.execSQL(CREATE_PARKING_LOT_TABLE);
         db.execSQL(CREATE_CORNER_TABLE);
+        create_parking_lots();
     }
 
     public void store(Entry entry) {
@@ -85,13 +97,20 @@ public class DataStorage extends SQLiteOpenHelper {
         statement.executeInsert();
     }
 
-    public void store_lots(ParkingLot lot) {
+    public void create_parking_lots() {
         SQLiteDatabase db = getWritableDatabase();
-        SQLiteStatement statement = db.compileStatement(INSERT_PARKING_LOT);
-        statement.bindLong(1, lot.getLotId());
-        statement.bindLong(2, lot.getCurrentCount());
-        statement.bindLong(3, lot.getCapacity());
-        statement.executeInsert();
+        List<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
+        parkingLots.add(new ParkingLot(1, "COMMONS", 0, 3));
+        parkingLots.add(new ParkingLot(2, "LOT 25", 0, 4));
+
+        for (ParkingLot lot : parkingLots) {
+            SQLiteStatement statement = db.compileStatement(INSERT_PARKING_LOT);
+            statement.bindLong(1, lot.getLotId());
+            statement.bindString(2, lot.getLotName());
+            statement.bindLong(3, lot.getCurrentCount());
+            statement.bindLong(4, lot.getCapacity());
+            statement.executeInsert();
+        }
     }
 
     @Override
@@ -146,9 +165,10 @@ public class DataStorage extends SQLiteOpenHelper {
             if (c.moveToFirst()) {
                 do {
                     long lot_id = c.getLong(c.getColumnIndex(COLUMN_PARKING_LOT_ID));
+                    String name = c.getString(c.getColumnIndex(COLUMN_LOT_NAME));
                     long count = c.getLong(c.getColumnIndex(COLUMN_CURRENT_COUNT));
                     long capacity = c.getLong(c.getColumnIndex(COLUMN_CAPACITY));
-                    ParkingLot lot = new ParkingLot(lot_id, count, capacity);
+                    ParkingLot lot = new ParkingLot(lot_id, name, count, capacity);
                     lots.add(lot);
                 } while (c.moveToNext());
             }
