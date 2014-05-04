@@ -10,6 +10,11 @@ if(empty($lot_id)) {
     die("Specify the lot in which you are parking.");
 }
 
+if(empty($capacity) or $capacity < 0) {
+    header("HTTP/1.0 400 Bad Request");
+    die("Capacity cannot be blank.");
+}
+
 $db_username = file_get_contents('./database_config.txt', NULL, NULL, 0, 11);
 $db_password = file_get_contents('./database_config.txt', NULL, NULL, 0, 15);
 $connection = mysql_connect("localhost", $db_username, $db_password);
