@@ -56,7 +56,7 @@ if(!$result) {
 
 mysql_close($connection);
 
-print "Successfully updated the current capacity.";
+print "Your parking request has been successfully registered.";
 
 function table_exists($tablename, $database = false) {
     if(!$database) {
