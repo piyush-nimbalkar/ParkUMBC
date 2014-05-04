@@ -77,8 +77,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         new LatLng(39.254483333, -76.71125),
                         new LatLng(39.2549, -76.711016667),
                         new LatLng(39.2551, -76.7116));
-        map.addPolygon(rectOptions.fillColor(0x500011FF).strokeColor(0x50444444)
-                .strokeWidth(4));
+        map.addPolygon(rectOptions.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
 
         PolygonOptions Transit = new PolygonOptions()
                 .add(new LatLng(39.254783333, -76.707516667),
@@ -90,8 +89,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         new LatLng(39.2535, -76.707583333),
                         new LatLng(39.253783333, -76.708),
                         new LatLng(39.254116667, -76.708116667));
-        map.addPolygon(Transit.fillColor(0x500011FF).strokeColor(0x50444444)
-                .strokeWidth(4));
+        map.addPolygon(Transit.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
 
     }
 
