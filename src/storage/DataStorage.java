@@ -14,38 +14,59 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
 public class DataStorage extends SQLiteOpenHelper {
-    private static final String TABLE_NAME = "entries";
-    private static final String DB_NAME = "parking.db";
-    private static final String LATITUDE_COLUMN = "latitude";
-    private static final String LONGITUDE_COLUMN = "longitude";
-    private static final String PARKING_LOT_ID_COLUMN = "parking_lot_id";
-    private static final String IS_PARKED_COLUMN = "is_parked";
 
-    private static final String TABLE_PARKING_LOTS = "parking_lots";
-    private static final String LOT_ID_COLUMN = "lot_id";
-    private static final String COUNT_COLUMN = "current_count";
-    private static final String CAPACITY_COLUMN = "capacity";
+    private static final String DB_NAME = "park_umbc.db";
 
+    private static final String TABLE_ENTRY = "entry";
+    private static final String TABLE_PARKING_LOT = "parking_lot";
+
+    private static final String COLUMN_PARKING_LOT_ID = "parking_lot_id";
+    private static final String COLUMN_LATITUDE = "latitude";
+    private static final String COLUMN_LONGITUDE = "longitude";
+    private static final String COLUMN_IS_PARKED = "is_parked";
+    private static final String COLUMN_CURRENT_COUNT = "current_count";
+    private static final String COLUMN_CAPACITY = "capacity";
+
+    private static final String CREATE_ENTRY_TABLE = "CREATE TABLE " +
+            TABLE_ENTRY + " (" +
+            _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_LATITUDE + " TEXT, " +
+            COLUMN_LONGITUDE + " TEXT, " +
+            COLUMN_PARKING_LOT_ID + " TEXT , " +
+            COLUMN_IS_PARKED + " BOOL );";
+
+    private static final String CREATE_PARKING_LOT_TABLE = "CREATE TABLE " +
+            TABLE_PARKING_LOT + " (" +
+            COLUMN_PARKING_LOT_ID + " INTEGER PRIMARY KEY, " +
+            COLUMN_CURRENT_COUNT + " TEXT, " +
+            COLUMN_CAPACITY + " TEXT );";
+
+    private static final String INSERT_ENTRY = "INSERT INTO " +
+            TABLE_ENTRY + " (" +
+            COLUMN_LATITUDE + "," +
+            COLUMN_LONGITUDE + "," +
+            COLUMN_PARKING_LOT_ID + "," +
+            COLUMN_IS_PARKED + ") values (?, ?, ?, ?)";
+
+    private static final String INSERT_PARKING_LOT = "insert into " +
+            TABLE_PARKING_LOT + " (" +
+            COLUMN_PARKING_LOT_ID + "," +
+            COLUMN_CURRENT_COUNT + "," +
+            COLUMN_CAPACITY + ") values ( ?, ?, ? )";
 
     public DataStorage(Context context) {
         super(context, DB_NAME, null, 1);
     }
 
-    private static final String DATABASE_CREATE = "CREATE TABLE " + TABLE_NAME + " (" +
-            _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            LATITUDE_COLUMN + " TEXT, " +
-            LONGITUDE_COLUMN + " TEXT, " +
-            PARKING_LOT_ID_COLUMN + " TEXT , " +
-            IS_PARKED_COLUMN + " BOOL );";
-
-    private static final String DATABASE_PARKING_LOTS = "CREATE TABLE " + TABLE_PARKING_LOTS + " (" +
-            LOT_ID_COLUMN + " INTEGER PRIMARY KEY, " +
-            COUNT_COLUMN + " TEXT, " +
-            CAPACITY_COLUMN + " TEXT );";
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_ENTRY_TABLE);
+        db.execSQL(CREATE_PARKING_LOT_TABLE);
+    }
 
     public void store(Entry entry) {
         SQLiteDatabase db = getWritableDatabase();
-        SQLiteStatement statement = db.compileStatement("insert into " + TABLE_NAME + " (" + LATITUDE_COLUMN + "," + LONGITUDE_COLUMN + "," + PARKING_LOT_ID_COLUMN + "," + IS_PARKED_COLUMN + ") values ( ?, ?, ?, ? )");
+        SQLiteStatement statement = db.compileStatement(INSERT_ENTRY);
         statement.bindDouble(1, entry.getLatitude());
         statement.bindDouble(2, entry.getLongitude());
         statement.bindLong(3, entry.getParkingLotId());
@@ -55,17 +76,11 @@ public class DataStorage extends SQLiteOpenHelper {
 
     public void store_lots(ParkingLot lot) {
         SQLiteDatabase db = getWritableDatabase();
-        SQLiteStatement statement = db.compileStatement("insert into " + TABLE_PARKING_LOTS + " (" + LOT_ID_COLUMN + "," + COUNT_COLUMN + "," + CAPACITY_COLUMN + ") values ( ?, ?, ? )");
+        SQLiteStatement statement = db.compileStatement(INSERT_PARKING_LOT);
         statement.bindLong(1, lot.getLotId());
         statement.bindLong(2, lot.getCurrentCount());
         statement.bindLong(3, lot.getCapacity());
         statement.executeInsert();
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DATABASE_CREATE);
-        db.execSQL(DATABASE_PARKING_LOTS);
     }
 
     @Override
@@ -74,15 +89,15 @@ public class DataStorage extends SQLiteOpenHelper {
 
     public List<Entry> get() {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_ENTRY, null);
         List<Entry> entries = new ArrayList<Entry>();
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
-                    double latitude = c.getDouble(c.getColumnIndex(LATITUDE_COLUMN));
-                    double longitude = c.getDouble(c.getColumnIndex(LONGITUDE_COLUMN));
-                    long parking_lot_id = c.getLong(c.getColumnIndex(PARKING_LOT_ID_COLUMN));
-                    boolean is_parked = c.getLong(c.getColumnIndex(IS_PARKED_COLUMN)) == 1;
+                    double latitude = c.getDouble(c.getColumnIndex(COLUMN_LATITUDE));
+                    double longitude = c.getDouble(c.getColumnIndex(COLUMN_LONGITUDE));
+                    long parking_lot_id = c.getLong(c.getColumnIndex(COLUMN_PARKING_LOT_ID));
+                    boolean is_parked = c.getLong(c.getColumnIndex(COLUMN_IS_PARKED)) == 1;
                     Entry entry = new Entry(latitude, longitude, parking_lot_id, is_parked);
                     entries.add(entry);
                 } while (c.moveToNext());
@@ -93,7 +108,7 @@ public class DataStorage extends SQLiteOpenHelper {
 
     public Entry getEntryDetails() {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_ENTRY, null);
         double latitude, longitude;
         long parking_lot_id;
         boolean is_parked;
@@ -101,10 +116,10 @@ public class DataStorage extends SQLiteOpenHelper {
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
-                    latitude = c.getDouble(c.getColumnIndex(LATITUDE_COLUMN));
-                    longitude = c.getDouble(c.getColumnIndex(LONGITUDE_COLUMN));
-                    parking_lot_id = c.getLong(c.getColumnIndex(PARKING_LOT_ID_COLUMN));
-                    is_parked = c.getLong(c.getColumnIndex(IS_PARKED_COLUMN)) == 1;
+                    latitude = c.getDouble(c.getColumnIndex(COLUMN_LATITUDE));
+                    longitude = c.getDouble(c.getColumnIndex(COLUMN_LONGITUDE));
+                    parking_lot_id = c.getLong(c.getColumnIndex(COLUMN_PARKING_LOT_ID));
+                    is_parked = c.getLong(c.getColumnIndex(COLUMN_IS_PARKED)) == 1;
                     entry = new Entry(latitude, longitude, parking_lot_id, is_parked);
                 } while (c.moveToNext());
             }
@@ -114,14 +129,14 @@ public class DataStorage extends SQLiteOpenHelper {
 
     public List<ParkingLot> getParkingLots() {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_PARKING_LOTS, null);
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_PARKING_LOT, null);
         List<ParkingLot> lots = new ArrayList<ParkingLot>();
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
-                    long lot_id = c.getLong(c.getColumnIndex(LOT_ID_COLUMN));
-                    long count = c.getLong(c.getColumnIndex(COUNT_COLUMN));
-                    long capacity = c.getLong(c.getColumnIndex(CAPACITY_COLUMN));
+                    long lot_id = c.getLong(c.getColumnIndex(COLUMN_PARKING_LOT_ID));
+                    long count = c.getLong(c.getColumnIndex(COLUMN_CURRENT_COUNT));
+                    long capacity = c.getLong(c.getColumnIndex(COLUMN_CAPACITY));
                     ParkingLot lot = new ParkingLot(lot_id, count, capacity);
                     lots.add(lot);
                 } while (c.moveToNext());
