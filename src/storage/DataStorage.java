@@ -5,6 +5,7 @@ import static android.provider.BaseColumns._ID;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
 import model.Entry;
 import model.ParkingLot;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.database.sqlite.SQLiteStatement;
 
 public class DataStorage extends SQLiteOpenHelper {
 
+    private static final String TAG = "DATABASE";
     private static final String DB_NAME = "park_umbc.db";
 
     private static final String TABLE_ENTRY = "entry";
@@ -84,7 +86,7 @@ public class DataStorage extends SQLiteOpenHelper {
         db.execSQL(CREATE_ENTRY_TABLE);
         db.execSQL(CREATE_PARKING_LOT_TABLE);
         db.execSQL(CREATE_CORNER_TABLE);
-        create_parking_lots();
+        create_parking_lots(db);
     }
 
     public void store(Entry entry) {
@@ -97,11 +99,32 @@ public class DataStorage extends SQLiteOpenHelper {
         statement.executeInsert();
     }
 
-    public void create_parking_lots() {
-        SQLiteDatabase db = getWritableDatabase();
+    public void create_parking_lots(SQLiteDatabase db) {
         List<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
         parkingLots.add(new ParkingLot(1, "COMMONS", 0, 3));
         parkingLots.add(new ParkingLot(2, "LOT 25", 0, 4));
+
+        double parking_lot_corners[][][] = {
+                {
+                        {39.25531666, -76.71158333},
+                        {39.255, -76.710483333},
+                        {39.254633333, -76.710666667},
+                        {39.254616667, -76.710766667},
+                        {39.2545, -76.7109},
+                        {39.2544, -76.710983333},
+                        {39.254483333, -76.71125},
+                        {39.2549, -76.711016667},
+                        {39.2551, -76.7116}},
+                {
+                        {39.254783333, -76.707516667},
+                        {39.254433333, -76.706733333},
+                        {39.254133333, -76.706916667},
+                        {39.254466667, -76.70765},
+                        {39.254383333, -76.707716667},
+                        {39.254016667, -76.707083333},
+                        {39.2535, -76.707583333},
+                        {39.253783333, -76.708},
+                        {39.254116667, -76.708116667}}};
 
         for (ParkingLot lot : parkingLots) {
             SQLiteStatement statement = db.compileStatement(INSERT_PARKING_LOT);
@@ -109,6 +132,19 @@ public class DataStorage extends SQLiteOpenHelper {
             statement.bindString(2, lot.getLotName());
             statement.bindLong(3, lot.getCurrentCount());
             statement.bindLong(4, lot.getCapacity());
+            statement.executeInsert();
+            create_parking_corners(db, lot, parking_lot_corners[((int) lot.getLotId() - 1)]);
+        }
+        Log.d(TAG, "Parking lots created.");
+    }
+
+    private void create_parking_corners(SQLiteDatabase db, ParkingLot lot, double corners[][]) {
+        for (int i = 0; i < corners.length; i++) {
+            SQLiteStatement statement = db.compileStatement(INSERT_CORNER);
+            statement.bindLong(1, lot.getLotId());
+            statement.bindDouble(2, corners[i][0]);
+            statement.bindDouble(3, corners[i][1]);
+            statement.bindLong(4, i);
             statement.executeInsert();
         }
     }

@@ -2,6 +2,7 @@ package repository;
 
 import java.util.List;
 
+import android.util.Log;
 import model.Entry;
 import model.ParkingLot;
 import storage.DataStorage;
