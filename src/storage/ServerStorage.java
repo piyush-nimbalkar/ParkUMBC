@@ -35,9 +35,9 @@ public class ServerStorage extends AsyncTask<String, Void, String> {
         HttpClient httpClient = new DefaultHttpClient();
         String url;
         if (this.is_parked == 1) {
-            url = "http://10.200.56.82:3000/park/" + this.parking_lot_id;        	
+            url = "http://mpss.csce.uark.edu/~devan/park.php";
         } else {
-        	url = "http://10.200.56.82:3000/unpark/" + this.parking_lot_id;
+            url = "http://mpss.csce.uark.edu/~devan/checkout.php";
         }
         HttpPost httpPost = new HttpPost(url);
         String result = null;
@@ -62,6 +62,7 @@ public class ServerStorage extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String resultString) {
         super.onPostExecute(resultString);
+        Log.d("SERVER", resultString);
     }
 
     private String toString(InputStream content) {
