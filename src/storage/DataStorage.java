@@ -22,7 +22,7 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String IS_PARKED_COLUMN = "is_parked";
 
     private static final String TABLE_PARKING_LOTS = "parking_lots";
-    private static final String LOT_ID_COLUMN = "current_count";
+    private static final String LOT_ID_COLUMN = "lot_id";
     private static final String COUNT_COLUMN = "current_count";
     private static final String CAPACITY_COLUMN = "capacity";
 
@@ -39,8 +39,7 @@ public class DataStorage extends SQLiteOpenHelper {
             IS_PARKED_COLUMN + " TEXT );";
 
     private static final String DATABASE_PARKING_LOTS = "CREATE TABLE " + TABLE_PARKING_LOTS + " (" +
-            _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            LOT_ID_COLUMN + " TEXT, " +
+            LOT_ID_COLUMN + " INTEGER PRIMARY KEY, " +
             COUNT_COLUMN + " TEXT, " +
             CAPACITY_COLUMN + " TEXT );";
 
