@@ -52,7 +52,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         addPolgons();
         entryRepository = new EntryRepository(getApplicationContext());
 
-        btnShowLocation = (Button) findViewById(R.id.button1);
+        btnShowLocation = (Button) findViewById(R.id.toggleButton);
         btnShowLocation.setOnClickListener(this);
     }
 
@@ -114,16 +114,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (locationTracker.canGetLocation()) {
             double latitude = locationTracker.getLatitude();
             double longitude = locationTracker.getLongitude();
-            Button ToggleButton = (Button) findViewById(R.id.button1);
+            Button toggleButton = (Button) findViewById(R.id.toggleButton);
 
-            if (ToggleButton.getText() == "Park") {
+            if (toggleButton.getText() == "Park") {
                 entryRepository.createEntry(latitude, longitude, 1, 1);
-                ToggleButton.setText("Checkout");
+                toggleButton.setText("Checkout");
                 Toast.makeText(getApplicationContext(), "Thank you for making UMBC better! :-)", Toast.LENGTH_SHORT).show();
                 threshold += 1;
             } else {
                 entryRepository.createEntry(latitude, longitude, 1, 0);
-                ToggleButton.setText("Park");
+                toggleButton.setText("Park");
                 Toast.makeText(getApplicationContext(), "Have a safe ride! :-)", Toast.LENGTH_SHORT).show();
                 threshold -= 1;
 //                        calculateClosest();
