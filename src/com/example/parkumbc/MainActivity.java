@@ -20,8 +20,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private Context context;
 
-    private GPSTracker gps;
     private GoogleMap map;
+    private LocationTracker locationTracker;
 
     private Button btnShowLocation;
     private EntryRepository entryRepository;
@@ -110,10 +110,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        gps = new GPSTracker(context);
-        if (gps.canGetLocation()) {
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
+        locationTracker = new LocationTracker(context);
+        if (locationTracker.canGetLocation()) {
+            double latitude = locationTracker.getLatitude();
+            double longitude = locationTracker.getLongitude();
             Button ToggleButton = (Button) findViewById(R.id.button1);
 
             if (ToggleButton.getText() == "Park") {
@@ -151,7 +151,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         .title("Transit").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             }
         } else {
-            gps.showSettingsAlert();
+            locationTracker.showSettingsAlert();
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (locationTracker != null)
+            locationTracker.removeLocationUpdates();
+    }
+
 }

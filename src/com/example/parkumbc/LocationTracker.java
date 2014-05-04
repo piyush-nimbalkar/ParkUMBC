@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-public class GPSTracker extends Service implements LocationListener {
+public class LocationTracker extends Service implements LocationListener {
 
     private static final String TAG = "LOCATION TRACKER";
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
@@ -26,7 +26,7 @@ public class GPSTracker extends Service implements LocationListener {
     boolean isNetworkEnabled = false;
     boolean canGetLocation = false;
 
-    public GPSTracker(Context context) {
+    public LocationTracker(Context context) {
         this.mContext = context;
         updateLocation();
     }
@@ -61,9 +61,9 @@ public class GPSTracker extends Service implements LocationListener {
         }
     }
 
-    public void stopUsingGPS() {
+    public void removeLocationUpdates() {
         if (locationManager != null) {
-            locationManager.removeUpdates(GPSTracker.this);
+            locationManager.removeUpdates(LocationTracker.this);
         }
     }
 
