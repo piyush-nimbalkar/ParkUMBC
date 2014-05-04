@@ -7,7 +7,7 @@ $current_count = 0;
 
 if(empty($lot_id)) {
     header("HTTP/1.0 400 Bad Request");
-    die("Specify the lot in which you are parking.");
+    die("Lot id cannot be blank.");
 }
 
 if(empty($capacity) or $capacity < 0) {
