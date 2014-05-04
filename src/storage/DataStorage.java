@@ -19,6 +19,7 @@ public class DataStorage extends SQLiteOpenHelper {
 
     private static final String TABLE_ENTRY = "entry";
     private static final String TABLE_PARKING_LOT = "parking_lot";
+    private static final String TABLE_CORNER = "corner";
 
     private static final String COLUMN_PARKING_LOT_ID = "parking_lot_id";
     private static final String COLUMN_LATITUDE = "latitude";
@@ -26,6 +27,7 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String COLUMN_IS_PARKED = "is_parked";
     private static final String COLUMN_CURRENT_COUNT = "current_count";
     private static final String COLUMN_CAPACITY = "capacity";
+    private static final String COLUMN_CORNER_INDEX = "corner_index";
 
     private static final String CREATE_ENTRY_TABLE = "CREATE TABLE " +
             TABLE_ENTRY + " (" +
@@ -41,18 +43,26 @@ public class DataStorage extends SQLiteOpenHelper {
             COLUMN_CURRENT_COUNT + " TEXT, " +
             COLUMN_CAPACITY + " TEXT );";
 
+    private static final String CREATE_CORNER_TABLE = "CREATE TABLE " +
+            TABLE_CORNER + " (" +
+            _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_PARKING_LOT_ID + " INTEGER, " +
+            COLUMN_LATITUDE + " TEXT, " +
+            COLUMN_LONGITUDE + " TEXT, " +
+            COLUMN_CORNER_INDEX + " INTEGER);";
+
     private static final String INSERT_ENTRY = "INSERT INTO " +
             TABLE_ENTRY + " (" +
             COLUMN_LATITUDE + "," +
             COLUMN_LONGITUDE + "," +
             COLUMN_PARKING_LOT_ID + "," +
-            COLUMN_IS_PARKED + ") values (?, ?, ?, ?)";
+            COLUMN_IS_PARKED + ") VALUES (?, ?, ?, ?)";
 
-    private static final String INSERT_PARKING_LOT = "insert into " +
+    private static final String INSERT_PARKING_LOT = "INSERT INTO " +
             TABLE_PARKING_LOT + " (" +
             COLUMN_PARKING_LOT_ID + "," +
             COLUMN_CURRENT_COUNT + "," +
-            COLUMN_CAPACITY + ") values ( ?, ?, ? )";
+            COLUMN_CAPACITY + ") VALUES (?, ?, ?)";
 
     public DataStorage(Context context) {
         super(context, DB_NAME, null, 1);
@@ -62,6 +72,7 @@ public class DataStorage extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_ENTRY_TABLE);
         db.execSQL(CREATE_PARKING_LOT_TABLE);
+        db.execSQL(CREATE_CORNER_TABLE);
     }
 
     public void store(Entry entry) {
