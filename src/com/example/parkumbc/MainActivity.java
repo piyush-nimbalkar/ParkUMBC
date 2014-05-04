@@ -111,12 +111,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
     public void onClick(View v) {
         gps = new GPSTracker(MainActivity.this);
         if (gps.canGetLocation()) {
