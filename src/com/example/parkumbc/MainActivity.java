@@ -1,6 +1,8 @@
 package com.example.parkumbc;
 
 import android.content.Context;
+import model.LatLong;
+import model.ParkingLot;
 import repository.EntryRepository;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +17,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
+
+import java.util.List;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -67,31 +71,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void addPolgons() {
-        entryRepository.getParkingLots();
-        PolygonOptions rectOptions = new PolygonOptions()
-                .add(new LatLng(39.25531666, -76.71158333))
-                .add(new LatLng(39.255, -76.710483333))
-                .add(new LatLng(39.254633333, -76.710666667))
-                .add(new LatLng(39.254616667, -76.710766667))
-                .add(new LatLng(39.2545, -76.7109))
-                .add(new LatLng(39.2544, -76.710983333))
-                .add(new LatLng(39.254483333, -76.71125))
-                .add(new LatLng(39.2549, -76.711016667))
-                .add(new LatLng(39.2551, -76.7116));
-        map.addPolygon(rectOptions.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
+        List<ParkingLot> parkingLots = entryRepository.getParkingLots();
 
-        PolygonOptions Transit = new PolygonOptions()
-                .add(new LatLng(39.254783333, -76.707516667),
-                        new LatLng(39.254433333, -76.706733333),
-                        new LatLng(39.254133333, -76.706916667),
-                        new LatLng(39.254466667, -76.70765),
-                        new LatLng(39.254383333, -76.707716667),
-                        new LatLng(39.254016667, -76.707083333),
-                        new LatLng(39.2535, -76.707583333),
-                        new LatLng(39.253783333, -76.708),
-                        new LatLng(39.254116667, -76.708116667));
-        map.addPolygon(Transit.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
-
+        for (ParkingLot lot : parkingLots) {
+            PolygonOptions options = new PolygonOptions();
+            for (LatLong l : lot.getCorners())
+                options.add(new LatLng(l.getLatitude(), l.getLongitude()));
+            map.addPolygon(options.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
+        }
     }
 
     private double calculateClosest() {
