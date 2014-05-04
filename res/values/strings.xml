@@ -7,4 +7,6 @@
     <string name="park">Park</string>
     <string name="checkout">Checkout</string>
 	<string name="view_parking_button">View Parking Lot</string>
+    <string name="on_park_message">Thank you for making UMBC better!</string>
+    <string name="on_checkout_message">Have a safe ride!</string>
 </resources>

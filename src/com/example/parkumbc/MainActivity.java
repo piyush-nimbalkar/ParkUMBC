@@ -120,12 +120,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             if (toggleButton.getText() == getString(R.string.park)) {
                 entryRepository.createEntry(latitude, longitude, 1, true);
                 toggleButton.setText(getString(R.string.checkout));
-                Toast.makeText(getApplicationContext(), "Thank you for making UMBC better! :-)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
                 current_count += 1;
             } else {
                 entryRepository.createEntry(latitude, longitude, 1, false);
                 toggleButton.setText(getString(R.string.park));
-                Toast.makeText(getApplicationContext(), "Have a safe ride! :-)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
                 current_count -= 1;
 //                calculateClosest();
             }
