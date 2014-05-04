@@ -2,81 +2,66 @@ package storage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.List;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
+import org.apache.http.message.BasicNameValuePair;
 
-public class ServerStorage extends AsyncTask<String, Void, String> {
+public class ServerStorage extends AsyncTask<String, Void, ServerResponse> {
 
     private long parking_lot_id;
     private long is_parked;
-
-    @Override
-    protected String doInBackground(String... params) {
-        return reportParking();
-    }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
     }
 
-    public String reportParking() {
+    @Override
+    protected ServerResponse doInBackground(String... params) {
+        ServerResponse serverResponse = null;
+        String base_url = "http://mpss.csce.uark.edu/~devan/";
+
+        String url = base_url + ((is_parked == 1) ? "park.php" : "checkout.php");
+
         HttpClient httpClient = new DefaultHttpClient();
-        String url;
-        if (this.is_parked == 1) {
-            url = "http://mpss.csce.uark.edu/~devan/park.php";
-        } else {
-            url = "http://mpss.csce.uark.edu/~devan/checkout.php";
-        }
         HttpPost httpPost = new HttpPost(url);
-        String result = null;
+
+        List<NameValuePair> value = new LinkedList<NameValuePair>();
+        value.add(new BasicNameValuePair("parking_lot_id", String.valueOf(parking_lot_id)));
+
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(value));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         try {
             HttpResponse httpResponse = httpClient.execute(httpPost);
-            StatusLine statusLine = httpResponse.getStatusLine();
-            int statusCode = statusLine.getStatusCode();
-            if (statusCode == 200) {
-                HttpEntity httpEntity = httpResponse.getEntity();
-                InputStream content = httpEntity.getContent();
-                result = toString(content);
-                Log.d("taggggg", result);
-            }
-        } catch (IOException httpResponseError) {
-              Log.e("HTTP Response", "IO error");
-            return "404 error";
+            BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+            String responseString = reader.readLine();
+            serverResponse = new ServerResponse(httpResponse.getStatusLine().getStatusCode(), responseString);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return result;
+
+        return serverResponse;
     }
 
     @Override
-    protected void onPostExecute(String resultString) {
-        super.onPostExecute(resultString);
-        Log.d("SERVER", resultString);
-    }
-
-    private String toString(InputStream content) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-        StringBuilder result = new StringBuilder();
-        String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                result.append(line);
-            }
-        } catch (IOException readerException) {
-            readerException.printStackTrace();
-        }
-        return result.toString();
+    protected void onPostExecute(ServerResponse response) {
+        super.onPostExecute(response);
+        Log.d("SERVER", response.getMessage());
     }
 
     public void store(long parking_lot_id, long is_parked) {

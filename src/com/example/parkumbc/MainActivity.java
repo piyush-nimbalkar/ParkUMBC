@@ -4,7 +4,6 @@ import android.content.Context;
 import repository.EntryRepository;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -101,7 +100,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         long parking_lots = coord.length;
         for (n = 0; n < parking_lots; n++) {
             for (i = 0; i < coord[n].length; i++) {
-
 
                 Toast.makeText(getApplicationContext(), Double.toString(coord[n][0][0]), 1).show();
                 Toast.makeText(getApplicationContext(), Double.toString(coord[n][i][1]), 1).show();
