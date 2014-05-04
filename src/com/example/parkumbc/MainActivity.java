@@ -110,7 +110,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        gps = new GPSTracker(MainActivity.this);
+        gps = new GPSTracker(context);
         if (gps.canGetLocation()) {
             double latitude = gps.getLatitude();
             double longitude = gps.getLongitude();
