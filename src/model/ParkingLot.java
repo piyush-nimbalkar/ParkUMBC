@@ -1,5 +1,7 @@
 package model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
 public class ParkingLot {
@@ -36,6 +38,20 @@ public class ParkingLot {
 
     public ArrayList<LatLong> getCorners() {
         return corners;
+    }
+
+    public LatLng getMarkerPosition() {
+        double latitude = 0, longitude = 0;
+
+        for (LatLong corner : corners) {
+            latitude += corner.getLatitude();
+            longitude += corner.getLongitude();
+        }
+
+        if (!corners.isEmpty())
+            return new LatLng(latitude / corners.size(), longitude / corners.size());
+        else
+            return new LatLng(latitude, longitude);
     }
 
 }

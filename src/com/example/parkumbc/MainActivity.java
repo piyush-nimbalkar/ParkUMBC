@@ -28,8 +28,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private GoogleMap map;
     private LocationTracker locationTracker;
 
-    private Button btnShowLocation;
     private EntryRepository entryRepository;
+    private List<ParkingLot> parkingLots;
+
+    private Button btnShowLocation;
     private int current_count = 0;
 
     double coord[][][] = {{{39.25531666, -76.71158333},
@@ -54,31 +56,28 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 new LatLng(39.255, -76.710), 15));
 
         entryRepository = new EntryRepository(getApplicationContext());
-        addMarkers();
+        parkingLots = entryRepository.getParkingLots();
         addPolgons();
 
         btnShowLocation = (Button) findViewById(R.id.toggleButton);
         btnShowLocation.setOnClickListener(this);
     }
 
-    private void addMarkers() {
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(39.2549, -76.71073))
-                .title("Commons").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(39.254266667, -76.707533333))
-                .title("Transit").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-    }
-
     private void addPolgons() {
-        List<ParkingLot> parkingLots = entryRepository.getParkingLots();
-
         for (ParkingLot lot : parkingLots) {
             PolygonOptions options = new PolygonOptions();
             for (LatLong l : lot.getCorners())
                 options.add(new LatLng(l.getLatitude(), l.getLongitude()));
             map.addPolygon(options.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
+            addMarker(lot);
         }
+    }
+
+    private void addMarker(ParkingLot lot) {
+        map.addMarker(new MarkerOptions()
+                .position(lot.getMarkerPosition())
+                .title(lot.getLotName())
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
     }
 
     private double calculateClosest() {
