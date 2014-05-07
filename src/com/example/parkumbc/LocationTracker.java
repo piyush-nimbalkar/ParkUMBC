@@ -19,7 +19,7 @@ public class LocationTracker extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     private static final long MIN_TIME_BETWEEN_UPDATES = 1000 * 60 * 1;
 
-    private final Context mContext;
+    private final Context context;
     private LocationManager locationManager;
     private Location location;
 
@@ -27,14 +27,14 @@ public class LocationTracker extends Service implements LocationListener {
     boolean isNetworkEnabled = false;
     boolean canGetLocation = false;
 
-    public LocationTracker(Context context) {
-        this.mContext = context;
+    public LocationTracker(Context context_) {
+        this.context = context_;
         updateLocation();
     }
 
     public void updateLocation() {
         try {
-            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+            locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
             isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
@@ -85,16 +85,16 @@ public class LocationTracker extends Service implements LocationListener {
     }
 
     public void showEnableGpsDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-        alertDialog.setTitle(getString(R.string.gps_dialog_title));
-        alertDialog.setMessage(getString(R.string.gps_dialog_message));
-        alertDialog.setPositiveButton(getString(R.string.settings_button), new DialogInterface.OnClickListener() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        alertDialog.setTitle(context.getString(R.string.gps_dialog_title));
+        alertDialog.setMessage(context.getString(R.string.gps_dialog_message));
+        alertDialog.setPositiveButton(context.getString(R.string.settings_button), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
+                context.startActivity(intent);
             }
         });
-        alertDialog.setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(context.getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
