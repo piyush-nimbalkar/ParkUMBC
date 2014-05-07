@@ -9,4 +9,8 @@
 	<string name="view_parking_button">View Parking Lot</string>
     <string name="on_park_message">Thank you for making UMBC better!</string>
     <string name="on_checkout_message">Have a safe ride!</string>
+    <string name="settings_button">Settings</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="gps_dialog_message">GPS is not enabled. Do you want to enable?</string>
+    <string name="gps_dialog_title">GPS Settings</string>
 </resources>
