@@ -131,7 +131,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 addMarker(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
             }
         } else {
-            locationTracker.showSettingsAlert();
+            locationTracker.showEnableGpsDialog();
         }
     }
 

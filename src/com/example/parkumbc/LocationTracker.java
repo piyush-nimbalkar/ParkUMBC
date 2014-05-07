@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 
 public class LocationTracker extends Service implements LocationListener {
@@ -83,28 +84,21 @@ public class LocationTracker extends Service implements LocationListener {
         return this.canGetLocation;
     }
 
-    public void showSettingsAlert() {
+    public void showEnableGpsDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-
         alertDialog.setTitle("GPS Settings");
-
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
-
-//    	On pressing Settings button
-//	    alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-//	        public void onClick(DialogInterface dialog,int which) {
-//	            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//	            mContext.startActivity(intent);
-//	        }
-//	    });
-
-        // on pressing cancel button
+        alertDialog.setMessage("GPS is not enabled. Do you want to enable?");
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                mContext.startActivity(intent);
+            }
+        });
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-
         alertDialog.show();
     }
 
