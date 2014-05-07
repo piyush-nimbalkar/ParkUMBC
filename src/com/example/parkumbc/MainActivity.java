@@ -58,6 +58,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         entryRepository = new EntryRepository(getApplicationContext());
         parkingLots = entryRepository.getParkingLots();
         addPolgons();
+        addMarkers();
 
         btnShowLocation = (Button) findViewById(R.id.toggleButton);
         btnShowLocation.setOnClickListener(this);
@@ -69,15 +70,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             for (LatLong l : lot.getCorners())
                 options.add(new LatLng(l.getLatitude(), l.getLongitude()));
             map.addPolygon(options.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
-            addMarker(lot);
         }
     }
 
-    private void addMarker(ParkingLot lot) {
+    private void addMarkers() {
+        for (ParkingLot lot : parkingLots)
+            addMarker(lot, BitmapDescriptorFactory.HUE_GREEN);
+    }
+
+    private void addMarker(ParkingLot lot, float color) {
         map.addMarker(new MarkerOptions()
                 .position(lot.getMarkerPosition())
                 .title(lot.getLotName())
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                .icon(BitmapDescriptorFactory.defaultMarker(color)));
     }
 
     private double calculateClosest() {
@@ -118,23 +123,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             if (current_count < THRESHOLD) {
                 map.clear();
                 addPolgons();
-                map.addMarker(new MarkerOptions()
-                        .position(new LatLng(39.2549, -76.71073))
-                        .title("Commons").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
-                map.addMarker(new MarkerOptions()
-                        .position(new LatLng(39.254266667, -76.707533333))
-                        .title("Transit").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                addMarkers();
             } else {
                 map.clear();
                 addPolgons();
-                map.addMarker(new MarkerOptions()
-                        .position(new LatLng(39.2549, -76.71073))
-                        .title("Commons").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-
-                map.addMarker(new MarkerOptions()
-                        .position(new LatLng(39.254266667, -76.707533333))
-                        .title("Transit").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                addMarker(parkingLots.get(0), BitmapDescriptorFactory.HUE_RED);
+                addMarker(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
             }
         } else {
             locationTracker.showSettingsAlert();
