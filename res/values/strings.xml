@@ -4,8 +4,8 @@
     <string name="app_name">ParkUMBC</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="park">Park</string>
-    <string name="checkout">Checkout</string>
+    <string name="park">PARK</string>
+    <string name="checkout">CHECKOUT</string>
 	<string name="view_parking_button">View Parking Lot</string>
     <string name="on_park_message">Thank you for making UMBC better!</string>
     <string name="on_checkout_message">Have a safe ride!</string>
@@ -16,4 +16,6 @@
     <string name="parking_class">Parking Class</string>
     <string name="about">About</string>
     <string name="feedback">Feedback</string>
+    <string name="search_button">SEARCH</string>
+    <string name="permit_button">PERMIT</string>
 </resources>
