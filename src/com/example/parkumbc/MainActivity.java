@@ -1,6 +1,7 @@
 package com.example.parkumbc;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -63,7 +64,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         addMarkers();
 
         TextView parkButton = (TextView) findViewById(R.id.park_button);
+        TextView permitButton = (TextView) findViewById(R.id.permit_button);
         parkButton.setOnClickListener(this);
+        permitButton.setOnClickListener(this);
     }
 
     private void addPolgons() {
@@ -141,6 +144,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch (view.getId()) {
             case R.id.park_button:
                 reportParking();
+                break;
+            case R.id.permit_button:
+                Intent intent = new Intent(context, PermitGroupActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
