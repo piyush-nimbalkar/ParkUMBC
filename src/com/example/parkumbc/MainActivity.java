@@ -2,6 +2,7 @@ package com.example.parkumbc;
 
 import android.content.Context;
 import android.view.Menu;
+import android.view.MenuItem;
 import model.LatLong;
 import model.ParkingLot;
 import repository.EntryRepository;
@@ -21,7 +22,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
+public class MainActivity extends FragmentActivity {
 
     private static final int THRESHOLD = 1;
     private Context context;
@@ -32,7 +33,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private EntryRepository entryRepository;
     private List<ParkingLot> parkingLots;
 
-    private Button btnShowLocation;
     private int current_count = 0;
 
     double coord[][][] = {{{39.25531666, -76.71158333},
@@ -60,9 +60,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         parkingLots = entryRepository.getParkingLots();
         addPolgons();
         addMarkers();
-
-        btnShowLocation = (Button) findViewById(R.id.toggleButton);
-        btnShowLocation.setOnClickListener(this);
     }
 
     private void addPolgons() {
@@ -100,22 +97,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return 1.3;
     }
 
-    @Override
-    public void onClick(View v) {
+    private void reportParking(MenuItem parkButton) {
         locationTracker = new LocationTracker(context);
         if (locationTracker.canGetLocation()) {
             double latitude = locationTracker.getLatitude();
             double longitude = locationTracker.getLongitude();
-            Button toggleButton = (Button) findViewById(R.id.toggleButton);
 
-            if (toggleButton.getText() == getString(R.string.park)) {
+            if (parkButton.getTitle() == getString(R.string.park)) {
                 entryRepository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), true);
-                toggleButton.setText(getString(R.string.checkout));
+                parkButton.setTitle(getString(R.string.checkout));
                 Toast.makeText(getApplicationContext(), getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
                 current_count += 1;
             } else {
                 entryRepository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), false);
-                toggleButton.setText(getString(R.string.park));
+                parkButton.setTitle(getString(R.string.park));
                 Toast.makeText(getApplicationContext(), R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
                 current_count -= 1;
 //                calculateClosest();
@@ -141,6 +136,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onPause();
         if (locationTracker != null)
             locationTracker.removeLocationUpdates();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.park_button:
+                reportParking(item);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
