@@ -108,12 +108,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Button toggleButton = (Button) findViewById(R.id.toggleButton);
 
             if (toggleButton.getText() == getString(R.string.park)) {
-                entryRepository.createEntry(latitude, longitude, 1, true);
+                entryRepository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), true);
                 toggleButton.setText(getString(R.string.checkout));
                 Toast.makeText(getApplicationContext(), getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
                 current_count += 1;
             } else {
-                entryRepository.createEntry(latitude, longitude, 1, false);
+                entryRepository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), false);
                 toggleButton.setText(getString(R.string.park));
                 Toast.makeText(getApplicationContext(), R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
                 current_count -= 1;
