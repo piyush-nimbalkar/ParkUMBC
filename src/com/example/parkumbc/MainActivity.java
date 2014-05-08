@@ -3,6 +3,7 @@ package com.example.parkumbc;
 import android.content.Context;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import model.LatLong;
 import model.ParkingLot;
 import repository.EntryRepository;
@@ -22,7 +23,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.List;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
     private static final int THRESHOLD = 1;
     private Context context;
@@ -60,6 +61,9 @@ public class MainActivity extends FragmentActivity {
         parkingLots = entryRepository.getParkingLots();
         addPolgons();
         addMarkers();
+
+        TextView parkButton = (TextView) findViewById(R.id.park_button);
+        parkButton.setOnClickListener(this);
     }
 
     private void addPolgons() {
@@ -97,20 +101,21 @@ public class MainActivity extends FragmentActivity {
         return 1.3;
     }
 
-    private void reportParking(MenuItem parkButton) {
+    private void reportParking() {
         locationTracker = new LocationTracker(context);
         if (locationTracker.canGetLocation()) {
             double latitude = locationTracker.getLatitude();
             double longitude = locationTracker.getLongitude();
+            TextView parkButton = (TextView) findViewById(R.id.park_button);
 
-            if (parkButton.getTitle() == getString(R.string.park)) {
+            if (parkButton.getText() == getString(R.string.park)) {
                 entryRepository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), true);
-                parkButton.setTitle(getString(R.string.checkout));
+                parkButton.setText(getString(R.string.checkout));
                 Toast.makeText(getApplicationContext(), getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
                 current_count += 1;
             } else {
                 entryRepository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), false);
-                parkButton.setTitle(getString(R.string.park));
+                parkButton.setText(getString(R.string.park));
                 Toast.makeText(getApplicationContext(), R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
                 current_count -= 1;
 //                calculateClosest();
@@ -132,27 +137,21 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        if (locationTracker != null)
-            locationTracker.removeLocationUpdates();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.park_button:
-                reportParking(item);
-                return true;
+                reportParking();
+                break;
             default:
-                return super.onOptionsItemSelected(item);
+                break;
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    protected void onPause() {
+        super.onPause();
+        if (locationTracker != null)
+            locationTracker.removeLocationUpdates();
     }
 
 }
