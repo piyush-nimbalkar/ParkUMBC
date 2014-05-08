@@ -13,4 +13,7 @@
     <string name="cancel_button">Cancel</string>
     <string name="gps_dialog_message">GPS is not enabled. Do you want to enable?</string>
     <string name="gps_dialog_title">GPS Settings</string>
+    <string name="parking_class">Parking Class</string>
+    <string name="about">About</string>
+    <string name="feedback">Feedback</string>
 </resources>

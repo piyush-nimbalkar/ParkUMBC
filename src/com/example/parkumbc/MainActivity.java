@@ -1,6 +1,7 @@
 package com.example.parkumbc;
 
 import android.content.Context;
+import android.view.Menu;
 import model.LatLong;
 import model.ParkingLot;
 import repository.EntryRepository;
@@ -140,6 +141,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onPause();
         if (locationTracker != null)
             locationTracker.removeLocationUpdates();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
 }
