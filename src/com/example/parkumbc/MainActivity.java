@@ -153,12 +153,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 LatLng current_location = new LatLng(latitude, longitude);
                 double min_dist = calculateClosest(current_location);
                 Log.d(TAG,"CLOSEST LOT IS " + min_dist + " FROM HERE");
-                Toast.makeText(getApplicationContext(), getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
                 current_count += 1;
             } else {
                 repository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), false);
                 parkButton.setText(getString(R.string.park));
-                Toast.makeText(getApplicationContext(), R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
                 current_count -= 1;
             }
 
