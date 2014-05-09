@@ -5,20 +5,27 @@ import android.os.Parcelable;
 
 public class PermitGroup implements Parcelable {
 
+    private long id;
     private String name;
     private String letter;
     private String color;
 
-    public PermitGroup(String name, String letter, String color) {
+    public PermitGroup(long id, String name, String letter, String color) {
+        this.id = id;
         this.name = name;
         this.letter = letter;
         this.color = color;
     }
 
     public PermitGroup(Parcel in) {
+        id = in.readLong();
         name = in.readString();
         letter = in.readString();
         color = in.readString();
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {
@@ -39,10 +46,11 @@ public class PermitGroup implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(letter);
-        dest.writeString(color);
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeLong(id);
+        out.writeString(name);
+        out.writeString(letter);
+        out.writeString(color);
     }
 
     public static final Parcelable.Creator<PermitGroup> CREATOR = new Parcelable.Creator<PermitGroup>() {

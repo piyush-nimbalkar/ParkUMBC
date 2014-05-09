@@ -5,7 +5,6 @@ import static android.provider.BaseColumns._ID;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.widget.ArrayAdapter;
 import com.google.android.gms.maps.model.LatLng;
 import android.util.Log;
 import model.Entry;
@@ -35,6 +34,7 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String COLUMN_CURRENT_COUNT = "current_count";
     private static final String COLUMN_CAPACITY = "capacity";
     private static final String COLUMN_CORNER_INDEX = "corner_index";
+    private static final String COLUMN_PERMIT_GROUP_ID = "permit_group_id";
     private static final String COLUMN_PERMIT_LETTER = "letter";
     private static final String COLUMN_PERMIT_COLOR = "color";
 
@@ -63,7 +63,7 @@ public class DataStorage extends SQLiteOpenHelper {
 
     private static final String CREATE_PERMIT_GROUP = "CREATE TABLE " +
             TABLE_PERMIT_GROUP + " (" +
-            _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_PERMIT_GROUP_ID + " INTEGER PRIMARY KEY, " +
             COLUMN_NAME + " TEXT, " +
             COLUMN_PERMIT_LETTER + " TEXT, " +
             COLUMN_PERMIT_COLOR + " TEXT);";
@@ -91,9 +91,10 @@ public class DataStorage extends SQLiteOpenHelper {
 
     private static final String INSERT_PERMIT_GROUP = "INSERT INTO " +
             TABLE_PERMIT_GROUP + " (" +
+            COLUMN_PERMIT_GROUP_ID + "," +
             COLUMN_NAME + "," +
             COLUMN_PERMIT_LETTER + "," +
-            COLUMN_PERMIT_COLOR + ") VALUES (?, ?, ?)";
+            COLUMN_PERMIT_COLOR + ") VALUES (?, ?, ?, ?)";
 
 
     public DataStorage(Context context) {
@@ -113,17 +114,18 @@ public class DataStorage extends SQLiteOpenHelper {
     private void createPermitGroups(SQLiteDatabase db) {
         List<PermitGroup> permits = new ArrayList<PermitGroup>();
 
-        permits.add(new PermitGroup("Commuter Student", "A", "red"));
-        permits.add(new PermitGroup("Walker Community Student", "B", "green"));
-        permits.add(new PermitGroup("Residential Student (Besides Walker)", "C", "yellow"));
-        permits.add(new PermitGroup("Faculty/Staff", "D", "violet"));
-        permits.add(new PermitGroup("Gated Faculty/Staff", "E", "violet"));
+        permits.add(new PermitGroup(1, "Commuter Student", "A", "red"));
+        permits.add(new PermitGroup(2, "Walker Community Student", "B", "green"));
+        permits.add(new PermitGroup(3, "Residential Student (Besides Walker)", "C", "yellow"));
+        permits.add(new PermitGroup(4, "Faculty/Staff", "D", "violet"));
+        permits.add(new PermitGroup(5, "Gated Faculty/Staff", "E", "violet"));
 
         for (PermitGroup permit : permits) {
             SQLiteStatement statement = db.compileStatement(INSERT_PERMIT_GROUP);
-            statement.bindString(1, permit.getName());
-            statement.bindString(2, permit.getLetter());
-            statement.bindString(3, permit.getColor());
+            statement.bindLong(1, permit.getId());
+            statement.bindString(2, permit.getName());
+            statement.bindString(3, permit.getLetter());
+            statement.bindString(4, permit.getColor());
             statement.executeInsert();
         }
         Log.d(TAG, "Permit groups created.");
@@ -154,8 +156,8 @@ public class DataStorage extends SQLiteOpenHelper {
         corners_two.add(new LatLng(39.253783333, -76.708));
         corners_two.add(new LatLng(39.254116667, -76.708116667));
 
-        parkingLots.add(new ParkingLot(1, "COMMONS", 0, 3, corners_one));
-        parkingLots.add(new ParkingLot(2, "LOT 25", 0, 4, corners_two));
+        parkingLots.add(new ParkingLot(1, "Commons", 0, 3, corners_one));
+        parkingLots.add(new ParkingLot(2, "Lot 25", 0, 4, corners_two));
 
         for (ParkingLot lot : parkingLots) {
             SQLiteStatement statement = db.compileStatement(INSERT_PARKING_LOT);
@@ -239,10 +241,11 @@ public class DataStorage extends SQLiteOpenHelper {
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
+                    long id = c.getLong(c.getColumnIndex(COLUMN_PERMIT_GROUP_ID));
                     String name = c.getString(c.getColumnIndex(COLUMN_NAME));
                     String letter = c.getString(c.getColumnIndex(COLUMN_PERMIT_LETTER));
                     String color = c.getString(c.getColumnIndex(COLUMN_PERMIT_COLOR));
-                    permits.add(new PermitGroup(name, letter, color));
+                    permits.add(new PermitGroup(id, name, letter, color));
                 } while (c.moveToNext());
             }
         }
