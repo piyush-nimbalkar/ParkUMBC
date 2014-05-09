@@ -59,8 +59,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         repository = new Repository(getApplicationContext());
         parkingLots = repository.getParkingLots();
-        addPolgons();
-        addMarkers();
+        for (ParkingLot lot : parkingLots)
+            addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
 
         TextView parkButton = (TextView) findViewById(R.id.park_button);
         TextView permitButton = (TextView) findViewById(R.id.permit_button);
@@ -68,18 +68,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         permitButton.setOnClickListener(this);
     }
 
-    private void addPolgons() {
-        for (ParkingLot lot : parkingLots) {
-            PolygonOptions options = new PolygonOptions();
-            for (LatLng l : lot.getCorners())
-                options.add(new LatLng(l.latitude, l.longitude));
-            map.addPolygon(options.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
-        }
-    }
-
-    private void addMarkers() {
-        for (ParkingLot lot : parkingLots)
-            addMarker(lot, BitmapDescriptorFactory.HUE_GREEN);
+    private void addPolygon(ParkingLot lot, float color) {
+        PolygonOptions options = new PolygonOptions();
+        for (LatLng l : lot.getCorners())
+            options.add(new LatLng(l.latitude, l.longitude));
+        map.addPolygon(options.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
+        addMarker(lot, color);
     }
 
     private void addMarker(ParkingLot lot, float color) {
@@ -125,13 +119,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             if (current_count < THRESHOLD) {
                 map.clear();
-                addPolgons();
-                addMarkers();
+                addPolygon(parkingLots.get(0), BitmapDescriptorFactory.HUE_GREEN);
+                addPolygon(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
             } else {
                 map.clear();
-                addPolgons();
-                addMarker(parkingLots.get(0), BitmapDescriptorFactory.HUE_RED);
-                addMarker(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
+                addPolygon(parkingLots.get(0), BitmapDescriptorFactory.HUE_RED);
+                addPolygon(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
             }
         } else {
             locationTracker.showEnableGpsDialog();
