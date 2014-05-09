@@ -13,12 +13,11 @@ public class ParkingLot {
     private ArrayList<LatLng> corners;
     private ArrayList<PermitGroup> permitGroups;
 
-    public ParkingLot(long lot_id, String name, long current_count, long capacity, ArrayList<LatLng> corners) {
+    public ParkingLot(long lot_id, String name, long current_count, long capacity) {
         this.lot_id = lot_id;
         this.name = name;
         this.current_count = current_count;
         this.capacity = capacity;
-        this.corners = corners;
     }
 
     public long getLotId() {
@@ -39,6 +38,10 @@ public class ParkingLot {
 
     public ArrayList<LatLng> getCorners() {
         return corners;
+    }
+
+    public void setCorners(ArrayList<LatLng> corners) {
+        this.corners = corners;
     }
 
     public void setPermitGroups(ArrayList<PermitGroup> permitGroups) {

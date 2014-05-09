@@ -151,8 +151,13 @@ public class DataStorage extends SQLiteOpenHelper {
         corners_two.add(new LatLng(39.253783333, -76.708));
         corners_two.add(new LatLng(39.254116667, -76.708116667));
 
-        parkingLots.add(new ParkingLot(1, "Commons", 0, 3, corners_one));
-        parkingLots.add(new ParkingLot(2, "Lot 25", 0, 4, corners_two));
+        ParkingLot parkingLot = new ParkingLot(1, "Commons", 0, 3);
+        parkingLot.setCorners(corners_one);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(2, "Lot 25", 0, 4);
+        parkingLot.setCorners(corners_two);
+        parkingLots.add(parkingLot);
 
         for (ParkingLot lot : parkingLots) {
             SQLiteStatement statement = db.compileStatement(INSERT_PARKING_LOT);
@@ -232,10 +237,11 @@ public class DataStorage extends SQLiteOpenHelper {
                     String name = c.getString(c.getColumnIndex(COLUMN_NAME));
                     long count = c.getLong(c.getColumnIndex(COLUMN_CURRENT_COUNT));
                     long capacity = c.getLong(c.getColumnIndex(COLUMN_CAPACITY));
-                    ArrayList<LatLng> corners = getCorners(db, lotId);
 
-                    ParkingLot lot = new ParkingLot(lotId, name, count, capacity, corners);
+                    ParkingLot lot = new ParkingLot(lotId, name, count, capacity);
+                    lot.setCorners(getCorners(db, lotId));
                     lot.setPermitGroups(getPermitGroups(db, lotId));
+
                     lots.add(lot);
                 } while (c.moveToNext());
             }
@@ -287,7 +293,7 @@ public class DataStorage extends SQLiteOpenHelper {
                 TABLE_PERMIT_GROUP + " B ON A." + COLUMN_PERMIT_GROUP_ID + "=B." +
                 COLUMN_PERMIT_GROUP_ID + " WHERE A." + COLUMN_PARKING_LOT_ID + "=?";
 
-        Cursor c = db.rawQuery(query, new String[] {String.valueOf(lotId)});
+        Cursor c = db.rawQuery(query, new String[]{String.valueOf(lotId)});
 
         if (c != null) {
             if (c.moveToFirst()) {
