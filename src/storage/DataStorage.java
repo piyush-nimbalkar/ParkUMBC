@@ -25,6 +25,7 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String TABLE_PARKING_LOT = "parking_lot";
     private static final String TABLE_CORNER = "corner";
     private static final String TABLE_PERMIT_GROUP = "permit_group";
+    private static final String TABLE_PARKING_PERMIT = "parking_permit";
 
     private static final String COLUMN_PARKING_LOT_ID = "parking_lot_id";
     private static final String COLUMN_LATITUDE = "latitude";
@@ -61,12 +62,19 @@ public class DataStorage extends SQLiteOpenHelper {
             COLUMN_LONGITUDE + " TEXT, " +
             COLUMN_CORNER_INDEX + " INTEGER);";
 
-    private static final String CREATE_PERMIT_GROUP = "CREATE TABLE " +
+    private static final String CREATE_PERMIT_GROUP_TABLE = "CREATE TABLE " +
             TABLE_PERMIT_GROUP + " (" +
             COLUMN_PERMIT_GROUP_ID + " INTEGER PRIMARY KEY, " +
             COLUMN_NAME + " TEXT, " +
             COLUMN_PERMIT_LETTER + " TEXT, " +
             COLUMN_PERMIT_COLOR + " TEXT);";
+
+    private static final String CREATE_PARKING_PERMIT_TABLE = "CREATE TABLE " +
+            TABLE_PARKING_PERMIT + " (" +
+            COLUMN_PARKING_LOT_ID + " INTEGER, " +
+            COLUMN_PERMIT_GROUP_ID + " INTEGER, PRIMARY KEY(" +
+            COLUMN_PARKING_LOT_ID + ", " +
+            COLUMN_PERMIT_GROUP_ID + "));";
 
     private static final String INSERT_ENTRY = "INSERT INTO " +
             TABLE_ENTRY + " (" +
@@ -96,6 +104,11 @@ public class DataStorage extends SQLiteOpenHelper {
             COLUMN_PERMIT_LETTER + "," +
             COLUMN_PERMIT_COLOR + ") VALUES (?, ?, ?, ?)";
 
+    private static final String INSERT_PARKING_PERMIT = "INSERT INTO " +
+            TABLE_PARKING_PERMIT + " (" +
+            COLUMN_PARKING_LOT_ID + "," +
+            COLUMN_PERMIT_GROUP_ID + ") VALUES (?, ?)";
+
 
     public DataStorage(Context context) {
         super(context, DB_NAME, null, 1);
@@ -106,29 +119,11 @@ public class DataStorage extends SQLiteOpenHelper {
         db.execSQL(CREATE_ENTRY_TABLE);
         db.execSQL(CREATE_PARKING_LOT_TABLE);
         db.execSQL(CREATE_CORNER_TABLE);
-        db.execSQL(CREATE_PERMIT_GROUP);
+        db.execSQL(CREATE_PERMIT_GROUP_TABLE);
+        db.execSQL(CREATE_PARKING_PERMIT_TABLE);
         create_parking_lots(db);
         createPermitGroups(db);
-    }
-
-    private void createPermitGroups(SQLiteDatabase db) {
-        List<PermitGroup> permits = new ArrayList<PermitGroup>();
-
-        permits.add(new PermitGroup(1, "Commuter Student", "A", "red"));
-        permits.add(new PermitGroup(2, "Walker Community Student", "B", "green"));
-        permits.add(new PermitGroup(3, "Residential Student (Besides Walker)", "C", "yellow"));
-        permits.add(new PermitGroup(4, "Faculty/Staff", "D", "violet"));
-        permits.add(new PermitGroup(5, "Gated Faculty/Staff", "E", "violet"));
-
-        for (PermitGroup permit : permits) {
-            SQLiteStatement statement = db.compileStatement(INSERT_PERMIT_GROUP);
-            statement.bindLong(1, permit.getId());
-            statement.bindString(2, permit.getName());
-            statement.bindString(3, permit.getLetter());
-            statement.bindString(4, permit.getColor());
-            statement.executeInsert();
-        }
-        Log.d(TAG, "Permit groups created.");
+        createParkingPermits(db);
     }
 
     public void create_parking_lots(SQLiteDatabase db) {
@@ -181,6 +176,38 @@ public class DataStorage extends SQLiteOpenHelper {
             statement.bindLong(4, i);
             statement.executeInsert();
         }
+    }
+
+    private void createPermitGroups(SQLiteDatabase db) {
+        List<PermitGroup> permits = new ArrayList<PermitGroup>();
+
+        permits.add(new PermitGroup(1, "Commuter Student", "A", "red"));
+        permits.add(new PermitGroup(2, "Walker Community Student", "B", "green"));
+        permits.add(new PermitGroup(3, "Residential Student (Besides Walker)", "C", "yellow"));
+        permits.add(new PermitGroup(4, "Faculty/Staff", "D", "violet"));
+        permits.add(new PermitGroup(5, "Gated Faculty/Staff", "E", "violet"));
+
+        for (PermitGroup permit : permits) {
+            SQLiteStatement statement = db.compileStatement(INSERT_PERMIT_GROUP);
+            statement.bindLong(1, permit.getId());
+            statement.bindString(2, permit.getName());
+            statement.bindString(3, permit.getLetter());
+            statement.bindString(4, permit.getColor());
+            statement.executeInsert();
+        }
+        Log.d(TAG, "Permit groups created.");
+    }
+
+    private void createParkingPermits(SQLiteDatabase db) {
+        long[][] parking_permit_relation = {{1, 1}, {1, 2}, {1, 5}, {2, 1}, {2, 2}, {2, 4}};
+
+        for (int i = 0; i < parking_permit_relation.length; i++) {
+            SQLiteStatement statement = db.compileStatement(INSERT_PARKING_PERMIT);
+            statement.bindLong(1, parking_permit_relation[i][0]);
+            statement.bindLong(2, parking_permit_relation[i][1]);
+            statement.executeInsert();
+        }
+        Log.d(TAG, "Parking - Permit Group relations created.");
     }
 
     public void store(Entry entry) {
