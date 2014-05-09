@@ -235,6 +235,7 @@ public class DataStorage extends SQLiteOpenHelper {
                     ArrayList<LatLng> corners = getCorners(db, lotId);
 
                     ParkingLot lot = new ParkingLot(lotId, name, count, capacity, corners);
+                    lot.setPermitGroups(getPermitGroups(db, lotId));
                     lots.add(lot);
                 } while (c.moveToNext());
             }
@@ -264,6 +265,29 @@ public class DataStorage extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_PERMIT_GROUP, null);
         ArrayList<PermitGroup> permits = new ArrayList<PermitGroup>();
+
+        if (c != null) {
+            if (c.moveToFirst()) {
+                do {
+                    long id = c.getLong(c.getColumnIndex(COLUMN_PERMIT_GROUP_ID));
+                    String name = c.getString(c.getColumnIndex(COLUMN_NAME));
+                    String letter = c.getString(c.getColumnIndex(COLUMN_PERMIT_LETTER));
+                    String color = c.getString(c.getColumnIndex(COLUMN_PERMIT_COLOR));
+                    permits.add(new PermitGroup(id, name, letter, color));
+                } while (c.moveToNext());
+            }
+        }
+        return permits;
+    }
+
+    public ArrayList<PermitGroup> getPermitGroups(SQLiteDatabase db, long lotId) {
+        ArrayList<PermitGroup> permits = new ArrayList<PermitGroup>();
+
+        String query = "SELECT * FROM " + TABLE_PARKING_PERMIT + " A INNER JOIN " +
+                TABLE_PERMIT_GROUP + " B ON A." + COLUMN_PERMIT_GROUP_ID + "=B." +
+                COLUMN_PERMIT_GROUP_ID + " WHERE A." + COLUMN_PARKING_LOT_ID + "=?";
+
+        Cursor c = db.rawQuery(query, new String[] {String.valueOf(lotId)});
 
         if (c != null) {
             if (c.moveToFirst()) {
