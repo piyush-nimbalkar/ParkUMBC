@@ -3,6 +3,7 @@ package repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
 import model.Entry;
 import model.ParkingLot;
 import model.PermitGroup;
@@ -29,6 +30,7 @@ public class Repository {
     }
 
     public List<ParkingLot> getParkingLots() {
+        Log.d(TAG, "In Repository.java");
         return dataStorage.getParkingLots();
     }
 

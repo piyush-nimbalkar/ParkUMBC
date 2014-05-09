@@ -70,6 +70,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         repository = new Repository(getApplicationContext());
         parkingLots = repository.getParkingLots();
+        Log.d(TAG, "No. of parking lots: " + parkingLots.size());
+
         for (ParkingLot lot : parkingLots)
             addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
 
@@ -120,8 +122,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private  double getDistance(ParkingLot parkingLot, LatLng p){
         double min_dist = Double.MAX_VALUE, tmp_dist;
         ArrayList<LatLng> corners = parkingLot.getCorners();
+        Log.d(TAG, "Parking Lot: " + parkingLot.getLotName());
         for (int i = 0; i < corners.size(); i++){
             tmp_dist = distanceFromSide(corners.get(i), corners.get((i+1)%corners.size()), p);
+            Log.d(TAG, "Dist: " + tmp_dist);
             if (tmp_dist < min_dist)
                 min_dist = tmp_dist;
         }
@@ -129,13 +133,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private double calculateClosest(LatLng p) {
-
         double min_dist = Double.MAX_VALUE, tmp_dist;
-
+        Log.d(TAG, "POINT:" + p.latitude + " " + p.longitude);
+        Log.d(TAG, "PARKING LOTS: " + parkingLots.size());
         for (int i = 0; i < parkingLots.size(); i++) {
             tmp_dist = getDistance(parkingLots.get(i), p);
             if (tmp_dist < min_dist)
                 min_dist = tmp_dist;
+
         }
         return min_dist;
     }
@@ -164,12 +169,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             if (current_count < THRESHOLD) {
                 map.clear();
-                addPolygon(parkingLots.get(0), BitmapDescriptorFactory.HUE_GREEN);
-                addPolygon(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
+                for (ParkingLot lot : parkingLots) {
+                    addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
+                }
+//                addPolygon(parkingLots.get(0), BitmapDescriptorFactory.HUE_GREEN);
+//                addPolygon(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
             } else {
                 map.clear();
+                for (ParkingLot lot : parkingLots) {
+                    addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
+                }
                 addPolygon(parkingLots.get(0), BitmapDescriptorFactory.HUE_RED);
-                addPolygon(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
+//                addPolygon(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
             }
         } else {
             Log.d(TAG, "PROMPT");
