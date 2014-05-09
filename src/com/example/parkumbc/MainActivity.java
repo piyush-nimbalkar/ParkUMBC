@@ -144,10 +144,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.permit_button:
                 Intent intent = new Intent(context, PermitGroupActivity.class);
-                List<PermitGroup> permitGroups = repository.getPermitGroups();
-                for (PermitGroup permit : permitGroups) {
-                    Toast.makeText(context, permit.getName(), Toast.LENGTH_SHORT).show();
-                }
+                intent.putParcelableArrayListExtra("PermitGroups", repository.getPermitGroups());
                 startActivity(intent);
                 break;
             default:

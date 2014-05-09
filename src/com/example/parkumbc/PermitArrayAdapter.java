@@ -6,18 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import model.PermitGroup;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public class PermitArrayAdapter extends ArrayAdapter<String> {
+public class PermitArrayAdapter extends ArrayAdapter<PermitGroup> {
 
     private final Context context;
-    private final List<String> values;
+    private final ArrayList<PermitGroup> values;
 
-    public PermitArrayAdapter(Context context_, List<String> values_) {
-        super(context_, R.layout.permit_group_row_layout, values_);
-        context = context_;
-        values = values_;
+    public PermitArrayAdapter(Context context, ArrayList<PermitGroup> values) {
+        super(context, R.layout.permit_group_row_layout, values);
+        this.context = context;
+        this.values = values;
     }
 
     @Override
@@ -25,7 +26,7 @@ public class PermitArrayAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.permit_group_row_layout, parent, false);
         TextView textViewPermitName = (TextView) rowView.findViewById(R.id.textViewPermitName);
-        textViewPermitName.setText(values.get(position));
+        textViewPermitName.setText(values.get(position).getName());
         return rowView;
     }
 

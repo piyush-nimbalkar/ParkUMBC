@@ -271,10 +271,10 @@ public class DataStorage extends SQLiteOpenHelper {
         return corners;
     }
 
-    public List<PermitGroup> getPermitGroups() {
+    public ArrayList<PermitGroup> getPermitGroups() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_PERMIT_GROUP, null);
-        List<PermitGroup> permits = new ArrayList<PermitGroup>();
+        ArrayList<PermitGroup> permits = new ArrayList<PermitGroup>();
 
         if (c != null) {
             if (c.moveToFirst()) {

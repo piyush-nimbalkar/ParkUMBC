@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import model.PermitGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PermitGroupActivity extends Activity implements AdapterView.OnItemClickListener {
 
@@ -17,11 +17,9 @@ public class PermitGroupActivity extends Activity implements AdapterView.OnItemC
         setContentView(R.layout.activity_permit_group);
         ListView listview = (ListView) findViewById(R.id.listViewPermitGroups);
 
-        List<String> values = new ArrayList<String>();
-        values.add("Student Commuters");
-        values.add("Faculty");
+        ArrayList<PermitGroup> permitGroups = getIntent().getParcelableArrayListExtra("PermitGroups");
 
-        final PermitArrayAdapter adapter = new PermitArrayAdapter(this, values);
+        final PermitArrayAdapter adapter = new PermitArrayAdapter(this, permitGroups);
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(this);
     }

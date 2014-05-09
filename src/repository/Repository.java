@@ -1,5 +1,6 @@
 package repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import model.Entry;
@@ -35,7 +36,7 @@ public class Repository {
         return dataStorage.getParkingLots();
     }
 
-    public List<PermitGroup> getPermitGroups() {
+    public ArrayList<PermitGroup> getPermitGroups() {
         return dataStorage.getPermitGroups();
     }
 
