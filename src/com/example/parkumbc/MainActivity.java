@@ -26,6 +26,7 @@ import static com.example.parkumbc.Constant.*;
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
     private static final int THRESHOLD = 1;
+    private static final int REQUEST_CODE = 1;
     private Context context;
 
     private GoogleMap map;
@@ -145,11 +146,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.permit_button:
                 Intent intent = new Intent(context, PermitGroupActivity.class);
                 intent.putParcelableArrayListExtra(PERMIT_GROUPS, repository.getPermitGroups());
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK)
+            permitGroup = data.getParcelableExtra(PERMIT_GROUP);
+        map.clear();
+        for (ParkingLot lot : parkingLots)
+            addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
