@@ -24,6 +24,7 @@ public class PermitGroupActivity extends Activity implements AdapterView.OnItemC
         ListView listview = (ListView) findViewById(R.id.listViewPermitGroups);
 
         permitGroups = getIntent().getParcelableArrayListExtra(PERMIT_GROUPS);
+        permitGroups.add(0, new PermitGroup(0, "All", "", ""));
 
         final PermitArrayAdapter adapter = new PermitArrayAdapter(this, permitGroups);
         listview.setAdapter(adapter);
@@ -33,7 +34,8 @@ public class PermitGroupActivity extends Activity implements AdapterView.OnItemC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent();
-        intent.putExtra(PERMIT_GROUP, permitGroups.get(position));
+        if (position > 0)
+            intent.putExtra(PERMIT_GROUP, permitGroups.get(position));
         setResult(RESULT_OK, intent);
         finish();
     }
