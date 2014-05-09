@@ -65,4 +65,16 @@ public class PermitGroup implements Parcelable {
 
     };
 
+    @Override
+    public boolean equals(Object o) {
+        if (o != null && o instanceof PermitGroup)
+            return (this.id == ((PermitGroup) o).id);
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(this.id).hashCode();
+    }
+
 }

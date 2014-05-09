@@ -40,6 +40,10 @@ public class ParkingLot {
         return corners;
     }
 
+    public ArrayList<PermitGroup> getPermitGroups() {
+        return permitGroups;
+    }
+
     public void setCorners(ArrayList<LatLng> corners) {
         this.corners = corners;
     }

@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.List;
 
-import static com.example.parkumbc.Constant.PERMIT_GROUPS;
+import static com.example.parkumbc.Constant.*;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -33,6 +33,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private Repository repository;
     private List<ParkingLot> parkingLots;
+    private PermitGroup permitGroup;
 
     private int current_count = 0;
 
@@ -52,6 +53,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         context = this;
 
+        permitGroup = getIntent().getParcelableExtra(PERMIT_GROUP);
+
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(
@@ -69,6 +72,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void addPolygon(ParkingLot lot, float color) {
+        if (permitGroup != null && !lot.getPermitGroups().contains(permitGroup))
+            return;
         PolygonOptions options = new PolygonOptions();
         for (LatLng l : lot.getCorners())
             options.add(new LatLng(l.latitude, l.longitude));
