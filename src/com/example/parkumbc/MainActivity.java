@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.widget.TextView;
 import model.ParkingLot;
 import model.PermitGroup;
-import repository.EntryRepository;
+import repository.Repository;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -29,7 +29,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private GoogleMap map;
     private LocationTracker locationTracker;
 
-    private EntryRepository entryRepository;
+    private Repository repository;
     private List<ParkingLot> parkingLots;
 
     private int current_count = 0;
@@ -55,8 +55,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(39.255, -76.710), 15));
 
-        entryRepository = new EntryRepository(getApplicationContext());
-        parkingLots = entryRepository.getParkingLots();
+        repository = new Repository(getApplicationContext());
+        parkingLots = repository.getParkingLots();
         addPolgons();
         addMarkers();
 
@@ -109,12 +109,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             TextView parkButton = (TextView) findViewById(R.id.park_button);
 
             if (parkButton.getText() == getString(R.string.park)) {
-                entryRepository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), true);
+                repository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), true);
                 parkButton.setText(getString(R.string.checkout));
                 Toast.makeText(getApplicationContext(), getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
                 current_count += 1;
             } else {
-                entryRepository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), false);
+                repository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), false);
                 parkButton.setText(getString(R.string.park));
                 Toast.makeText(getApplicationContext(), R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
                 current_count -= 1;
@@ -144,7 +144,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.permit_button:
                 Intent intent = new Intent(context, PermitGroupActivity.class);
-                List<PermitGroup> permitGroups = entryRepository.getPermitGroups();
+                List<PermitGroup> permitGroups = repository.getPermitGroups();
                 for (PermitGroup permit : permitGroups) {
                     Toast.makeText(context, permit.getName(), Toast.LENGTH_SHORT).show();
                 }
