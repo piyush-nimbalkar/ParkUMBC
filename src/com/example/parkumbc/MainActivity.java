@@ -1,8 +1,11 @@
 package com.example.parkumbc;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.TextView;
+import android.os.Build;
+import android.util.Log;
 import model.ParkingLot;
 import model.PermitGroup;
 import repository.Repository;
@@ -19,6 +22,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.parkumbc.Constant.*;
@@ -27,6 +31,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private static final int THRESHOLD = 1;
     private static final int REQUEST_CODE = 1;
+    private static final String TAG = "MAIN_ACTIVITY";
+
     private Context context;
 
     private GoogleMap map;
@@ -48,6 +54,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             {39.2549, -76.711016667},
             {39.2551, -76.7116}}};
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,18 +96,48 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .icon(BitmapDescriptorFactory.defaultMarker(color)));
     }
 
-    private double calculateClosest() {
-        int n, i;
-        double slope;
-        long parking_lots = coord.length;
-        for (n = 0; n < parking_lots; n++) {
-            for (i = 0; i < coord[n].length; i++) {
+    private double squaredLength(LatLng a, LatLng b) {
+        return Math.pow((a.latitude - b.latitude), 2) + Math.pow((a.latitude - b.longitude), 2);
+    }
 
-                Toast.makeText(getApplicationContext(), Double.toString(coord[n][0][0]), 1).show();
-                Toast.makeText(getApplicationContext(), Double.toString(coord[n][i][1]), 1).show();
-            }
+    private double distanceFromSideSquared(LatLng a, LatLng b, LatLng p) {
+        double tmp = squaredLength(a, b);
+        if (tmp == 0.0)
+            return squaredLength(p, a);
+        double t = (p.latitude - a.latitude) * (b.latitude - a.latitude) +  (p.longitude - a.longitude) * (b.longitude - a.longitude)/ tmp;
+        if (t < 0.0)
+            return squaredLength(p, a);
+        if (t > 1.0)
+            return squaredLength(p, b);
+        return squaredLength(p, new LatLng((a.latitude + t * (b.latitude - a.latitude)),
+                (a.longitude + t * (b.longitude - a.longitude))));
+    }
+
+    private double distanceFromSide(LatLng a, LatLng b, LatLng p){
+        return Math.sqrt(distanceFromSideSquared(a, b, p));
+    }
+
+    private  double getDistance(ParkingLot parkingLot, LatLng p){
+        double min_dist = Double.MAX_VALUE, tmp_dist;
+        ArrayList<LatLng> corners = parkingLot.getCorners();
+        for (int i = 0; i < corners.size(); i++){
+            tmp_dist = distanceFromSide(corners.get(i), corners.get((i+1)%corners.size()), p);
+            if (tmp_dist < min_dist)
+                min_dist = tmp_dist;
         }
-        return 1.3;
+        return min_dist;
+    }
+
+    private double calculateClosest(LatLng p) {
+
+        double min_dist = Double.MAX_VALUE, tmp_dist;
+
+        for (int i = 0; i < parkingLots.size(); i++) {
+            tmp_dist = getDistance(parkingLots.get(i), p);
+            if (tmp_dist < min_dist)
+                min_dist = tmp_dist;
+        }
+        return min_dist;
     }
 
     private void reportParking() {
@@ -113,6 +150,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             if (parkButton.getText() == getString(R.string.park)) {
                 repository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), true);
                 parkButton.setText(getString(R.string.checkout));
+                LatLng current_location = new LatLng(latitude, longitude);
+                double min_dist = calculateClosest(current_location);
+                Log.d(TAG,"CLOSEST LOT IS " + min_dist + " FROM HERE");
                 Toast.makeText(getApplicationContext(), getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
                 current_count += 1;
             } else {
@@ -120,7 +160,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 parkButton.setText(getString(R.string.park));
                 Toast.makeText(getApplicationContext(), R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
                 current_count -= 1;
-//                calculateClosest();
             }
 
             if (current_count < THRESHOLD) {
@@ -133,6 +172,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 addPolygon(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
             }
         } else {
+            Log.d(TAG, "PROMPT");
             locationTracker.showEnableGpsDialog();
         }
     }
