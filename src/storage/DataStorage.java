@@ -191,46 +191,6 @@ public class DataStorage extends SQLiteOpenHelper {
         statement.executeInsert();
     }
 
-    public List<Entry> get() {
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_ENTRY, null);
-        List<Entry> entries = new ArrayList<Entry>();
-        if (c != null) {
-            if (c.moveToFirst()) {
-                do {
-                    double latitude = c.getDouble(c.getColumnIndex(COLUMN_LATITUDE));
-                    double longitude = c.getDouble(c.getColumnIndex(COLUMN_LONGITUDE));
-                    long parking_lot_id = c.getLong(c.getColumnIndex(COLUMN_PARKING_LOT_ID));
-                    boolean is_parked = c.getLong(c.getColumnIndex(COLUMN_IS_PARKED)) == 1;
-                    Entry entry = new Entry(latitude, longitude, parking_lot_id, is_parked);
-                    entries.add(entry);
-                } while (c.moveToNext());
-            }
-        }
-        return entries;
-    }
-
-    public Entry getEntryDetails() {
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_ENTRY, null);
-        double latitude, longitude;
-        long parking_lot_id;
-        boolean is_parked;
-        Entry entry = null;
-        if (c != null) {
-            if (c.moveToFirst()) {
-                do {
-                    latitude = c.getDouble(c.getColumnIndex(COLUMN_LATITUDE));
-                    longitude = c.getDouble(c.getColumnIndex(COLUMN_LONGITUDE));
-                    parking_lot_id = c.getLong(c.getColumnIndex(COLUMN_PARKING_LOT_ID));
-                    is_parked = c.getLong(c.getColumnIndex(COLUMN_IS_PARKED)) == 1;
-                    entry = new Entry(latitude, longitude, parking_lot_id, is_parked);
-                } while (c.moveToNext());
-            }
-        }
-        return entry;
-    }
-
     public List<ParkingLot> getParkingLots() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_PARKING_LOT, null);

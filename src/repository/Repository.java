@@ -28,10 +28,6 @@ public class Repository {
         return true;
     }
 
-    public Entry getEntry() {
-        return dataStorage.getEntryDetails();
-    }
-
     public List<ParkingLot> getParkingLots() {
         return dataStorage.getParkingLots();
     }
