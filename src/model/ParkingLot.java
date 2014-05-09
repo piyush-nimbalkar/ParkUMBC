@@ -12,12 +12,12 @@ public class ParkingLot {
     private long capacity;
     private ArrayList<LatLng> corners;
 
-    public ParkingLot(long lot_id_, String name_, long current_count_, long capacity_, ArrayList<LatLng> corners_) {
-        lot_id = lot_id_;
-        name = name_;
-        current_count = current_count_;
-        capacity = capacity_;
-        corners = corners_;
+    public ParkingLot(long lot_id, String name, long current_count, long capacity, ArrayList<LatLng> corners) {
+        this.lot_id = lot_id;
+        this.name = name;
+        this.current_count = current_count;
+        this.capacity = capacity;
+        this.corners = corners;
     }
 
     public long getLotId() {
