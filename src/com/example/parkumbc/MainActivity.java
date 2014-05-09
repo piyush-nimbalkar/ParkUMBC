@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.TextView;
 import model.ParkingLot;
+import model.PermitGroup;
 import repository.EntryRepository;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -143,6 +144,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.permit_button:
                 Intent intent = new Intent(context, PermitGroupActivity.class);
+                List<PermitGroup> permitGroups = entryRepository.getPermitGroups();
+                for (PermitGroup permit : permitGroups) {
+                    Toast.makeText(context, permit.getName(), Toast.LENGTH_SHORT).show();
+                }
                 startActivity(intent);
                 break;
             default:

@@ -4,6 +4,7 @@ import java.util.List;
 
 import model.Entry;
 import model.ParkingLot;
+import model.PermitGroup;
 import storage.DataStorage;
 import storage.ServerStorage;
 import android.content.Context;
@@ -33,4 +34,9 @@ public class EntryRepository {
     public List<ParkingLot> getParkingLots() {
         return dataStorage.getParkingLots();
     }
+
+    public List<PermitGroup> getPermitGroups() {
+        return dataStorage.getPermitGroups();
+    }
+
 }

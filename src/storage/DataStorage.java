@@ -5,6 +5,7 @@ import static android.provider.BaseColumns._ID;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.widget.ArrayAdapter;
 import com.google.android.gms.maps.model.LatLng;
 import android.util.Log;
 import model.Entry;
@@ -234,6 +235,7 @@ public class DataStorage extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_PARKING_LOT, null);
         List<ParkingLot> lots = new ArrayList<ParkingLot>();
+
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
@@ -267,6 +269,24 @@ public class DataStorage extends SQLiteOpenHelper {
             }
         }
         return corners;
+    }
+
+    public List<PermitGroup> getPermitGroups() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_PERMIT_GROUP, null);
+        List<PermitGroup> permits = new ArrayList<PermitGroup>();
+
+        if (c != null) {
+            if (c.moveToFirst()) {
+                do {
+                    String name = c.getString(c.getColumnIndex(COLUMN_NAME));
+                    String letter = c.getString(c.getColumnIndex(COLUMN_PERMIT_LETTER));
+                    String color = c.getString(c.getColumnIndex(COLUMN_PERMIT_COLOR));
+                    permits.add(new PermitGroup(name, letter, color));
+                } while (c.moveToNext());
+            }
+        }
+        return permits;
     }
 
     @Override
