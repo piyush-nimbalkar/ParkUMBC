@@ -23,15 +23,18 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String TABLE_ENTRY = "entry";
     private static final String TABLE_PARKING_LOT = "parking_lot";
     private static final String TABLE_CORNER = "corner";
+    private static final String TABLE_PERMIT_GROUP = "permit_group";
 
     private static final String COLUMN_PARKING_LOT_ID = "parking_lot_id";
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
     private static final String COLUMN_IS_PARKED = "is_parked";
-    private static final String COLUMN_LOT_NAME = "name";
+    private static final String COLUMN_NAME = "name";
     private static final String COLUMN_CURRENT_COUNT = "current_count";
     private static final String COLUMN_CAPACITY = "capacity";
     private static final String COLUMN_CORNER_INDEX = "corner_index";
+    private static final String COLUMN_PERMIT_LETTER = "letter";
+    private static final String COLUMN_PERMIT_COLOR = "color";
 
     private static final String CREATE_ENTRY_TABLE = "CREATE TABLE " +
             TABLE_ENTRY + " (" +
@@ -44,7 +47,7 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String CREATE_PARKING_LOT_TABLE = "CREATE TABLE " +
             TABLE_PARKING_LOT + " (" +
             COLUMN_PARKING_LOT_ID + " INTEGER PRIMARY KEY, " +
-            COLUMN_LOT_NAME + " VARCHAR(200), " +
+            COLUMN_NAME + " VARCHAR(200), " +
             COLUMN_CURRENT_COUNT + " TEXT, " +
             COLUMN_CAPACITY + " TEXT );";
 
@@ -56,6 +59,13 @@ public class DataStorage extends SQLiteOpenHelper {
             COLUMN_LONGITUDE + " TEXT, " +
             COLUMN_CORNER_INDEX + " INTEGER);";
 
+    private static final String CREATE_PERMIT_GROUP = "CREATE TABLE " +
+            TABLE_PERMIT_GROUP + " (" +
+            _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_NAME + " TEXT, " +
+            COLUMN_PERMIT_LETTER + " TEXT, " +
+            COLUMN_PERMIT_COLOR + " TEXT);";
+
     private static final String INSERT_ENTRY = "INSERT INTO " +
             TABLE_ENTRY + " (" +
             COLUMN_LATITUDE + "," +
@@ -66,7 +76,7 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String INSERT_PARKING_LOT = "INSERT INTO " +
             TABLE_PARKING_LOT + " (" +
             COLUMN_PARKING_LOT_ID + "," +
-            COLUMN_LOT_NAME + "," +
+            COLUMN_NAME + "," +
             COLUMN_CURRENT_COUNT + "," +
             COLUMN_CAPACITY + ") VALUES (?, ?, ?, ?)";
 
@@ -87,6 +97,7 @@ public class DataStorage extends SQLiteOpenHelper {
         db.execSQL(CREATE_ENTRY_TABLE);
         db.execSQL(CREATE_PARKING_LOT_TABLE);
         db.execSQL(CREATE_CORNER_TABLE);
+        db.execSQL(CREATE_PERMIT_GROUP);
         create_parking_lots(db);
     }
 
@@ -204,7 +215,7 @@ public class DataStorage extends SQLiteOpenHelper {
             if (c.moveToFirst()) {
                 do {
                     long lotId = c.getLong(c.getColumnIndex(COLUMN_PARKING_LOT_ID));
-                    String name = c.getString(c.getColumnIndex(COLUMN_LOT_NAME));
+                    String name = c.getString(c.getColumnIndex(COLUMN_NAME));
                     long count = c.getLong(c.getColumnIndex(COLUMN_CURRENT_COUNT));
                     long capacity = c.getLong(c.getColumnIndex(COLUMN_CAPACITY));
                     ArrayList<LatLng> corners = getCorners(db, lotId);
