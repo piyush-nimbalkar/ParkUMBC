@@ -5,9 +5,9 @@ import static android.provider.BaseColumns._ID;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.gms.maps.model.LatLng;
 import android.util.Log;
 import model.Entry;
-import model.LatLong;
 import model.ParkingLot;
 import android.content.Context;
 import android.database.Cursor;
@@ -103,27 +103,27 @@ public class DataStorage extends SQLiteOpenHelper {
     public void create_parking_lots(SQLiteDatabase db) {
         List<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
 
-        ArrayList<LatLong> corners_one = new ArrayList<LatLong>();
-        corners_one.add(new LatLong(39.25531666, -76.71158333));
-        corners_one.add(new LatLong(39.255, -76.710483333));
-        corners_one.add(new LatLong(39.254633333, -76.710666667));
-        corners_one.add(new LatLong(39.254616667, -76.710766667));
-        corners_one.add(new LatLong(39.2545, -76.7109));
-        corners_one.add(new LatLong(39.2544, -76.710983333));
-        corners_one.add(new LatLong(39.254483333, -76.71125));
-        corners_one.add(new LatLong(39.2549, -76.711016667));
-        corners_one.add(new LatLong(39.2551, -76.7116));
+        ArrayList<LatLng> corners_one = new ArrayList<LatLng>();
+        corners_one.add(new LatLng(39.25531666, -76.71158333));
+        corners_one.add(new LatLng(39.255, -76.710483333));
+        corners_one.add(new LatLng(39.254633333, -76.710666667));
+        corners_one.add(new LatLng(39.254616667, -76.710766667));
+        corners_one.add(new LatLng(39.2545, -76.7109));
+        corners_one.add(new LatLng(39.2544, -76.710983333));
+        corners_one.add(new LatLng(39.254483333, -76.71125));
+        corners_one.add(new LatLng(39.2549, -76.711016667));
+        corners_one.add(new LatLng(39.2551, -76.7116));
 
-        ArrayList<LatLong> corners_two = new ArrayList<LatLong>();
-        corners_two.add(new LatLong(39.254783333, -76.707516667));
-        corners_two.add(new LatLong(39.254433333, -76.706733333));
-        corners_two.add(new LatLong(39.254133333, -76.706916667));
-        corners_two.add(new LatLong(39.254466667, -76.70765));
-        corners_two.add(new LatLong(39.254383333, -76.707716667));
-        corners_two.add(new LatLong(39.254016667, -76.707083333));
-        corners_two.add(new LatLong(39.2535, -76.707583333));
-        corners_two.add(new LatLong(39.253783333, -76.708));
-        corners_two.add(new LatLong(39.254116667, -76.708116667));
+        ArrayList<LatLng> corners_two = new ArrayList<LatLng>();
+        corners_two.add(new LatLng(39.254783333, -76.707516667));
+        corners_two.add(new LatLng(39.254433333, -76.706733333));
+        corners_two.add(new LatLng(39.254133333, -76.706916667));
+        corners_two.add(new LatLng(39.254466667, -76.70765));
+        corners_two.add(new LatLng(39.254383333, -76.707716667));
+        corners_two.add(new LatLng(39.254016667, -76.707083333));
+        corners_two.add(new LatLng(39.2535, -76.707583333));
+        corners_two.add(new LatLng(39.253783333, -76.708));
+        corners_two.add(new LatLng(39.254116667, -76.708116667));
 
         parkingLots.add(new ParkingLot(1, "COMMONS", 0, 3, corners_one));
         parkingLots.add(new ParkingLot(2, "LOT 25", 0, 4, corners_two));
@@ -141,12 +141,12 @@ public class DataStorage extends SQLiteOpenHelper {
     }
 
     private void create_parking_corners(SQLiteDatabase db, ParkingLot lot) {
-        ArrayList<LatLong> corners = lot.getCorners();
+        ArrayList<LatLng> corners = lot.getCorners();
         for (int i = 0; i < corners.size(); i++) {
             SQLiteStatement statement = db.compileStatement(INSERT_CORNER);
             statement.bindLong(1, lot.getLotId());
-            statement.bindDouble(2, corners.get(i).getLatitude());
-            statement.bindDouble(3, corners.get(i).getLongitude());
+            statement.bindDouble(2, corners.get(i).latitude);
+            statement.bindDouble(3, corners.get(i).longitude);
             statement.bindLong(4, i);
             statement.executeInsert();
         }
@@ -207,7 +207,7 @@ public class DataStorage extends SQLiteOpenHelper {
                     String name = c.getString(c.getColumnIndex(COLUMN_LOT_NAME));
                     long count = c.getLong(c.getColumnIndex(COLUMN_CURRENT_COUNT));
                     long capacity = c.getLong(c.getColumnIndex(COLUMN_CAPACITY));
-                    ArrayList<LatLong> corners = getCorners(db, lotId);
+                    ArrayList<LatLng> corners = getCorners(db, lotId);
 
                     ParkingLot lot = new ParkingLot(lotId, name, count, capacity, corners);
                     lots.add(lot);
@@ -217,8 +217,8 @@ public class DataStorage extends SQLiteOpenHelper {
         return lots;
     }
 
-    private ArrayList<LatLong> getCorners(SQLiteDatabase db, long lotId) {
-        ArrayList<LatLong> corners = new ArrayList<LatLong>();
+    private ArrayList<LatLng> getCorners(SQLiteDatabase db, long lotId) {
+        ArrayList<LatLng> corners = new ArrayList<LatLng>();
 
         Cursor c = db.query(TABLE_CORNER, null, COLUMN_PARKING_LOT_ID + "=?",
                 new String[] {String.valueOf(lotId)}, null, null, COLUMN_CORNER_INDEX, null);
@@ -228,7 +228,7 @@ public class DataStorage extends SQLiteOpenHelper {
                 do {
                     double latitude = c.getDouble(c.getColumnIndex(COLUMN_LATITUDE));
                     double longitude = c.getDouble(c.getColumnIndex(COLUMN_LONGITUDE));
-                    corners.add(new LatLong(latitude, longitude));
+                    corners.add(new LatLng(latitude, longitude));
                 } while (c.moveToNext());
             }
         }

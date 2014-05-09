@@ -2,16 +2,12 @@ package com.example.parkumbc;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
-import model.LatLong;
 import model.ParkingLot;
 import repository.EntryRepository;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -72,8 +68,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void addPolgons() {
         for (ParkingLot lot : parkingLots) {
             PolygonOptions options = new PolygonOptions();
-            for (LatLong l : lot.getCorners())
-                options.add(new LatLng(l.getLatitude(), l.getLongitude()));
+            for (LatLng l : lot.getCorners())
+                options.add(new LatLng(l.latitude, l.longitude));
             map.addPolygon(options.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
         }
     }
