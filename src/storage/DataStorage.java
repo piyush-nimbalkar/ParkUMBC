@@ -191,6 +191,11 @@ public class DataStorage extends SQLiteOpenHelper {
         permits.add(new PermitGroup(3, "Residential Student (Besides Walker)", "C", "yellow"));
         permits.add(new PermitGroup(4, "Faculty/Staff", "D", "violet"));
         permits.add(new PermitGroup(5, "Gated Faculty/Staff", "E", "violet"));
+        permits.add(new PermitGroup(6, "Freshman Resident Student", "F", "orange"));
+        permits.add(new PermitGroup(7, "Visitor Parking (Metered Spaces)", "P", "blue"));
+        permits.add(new PermitGroup(8, "Event Visitor Parking", "PE", "blue"));
+        permits.add(new PermitGroup(9, "Handicap Accessible Parking", "PH", "blue"));
+        permits.add(new PermitGroup(10, "Electric Vehicle Charging Station", "EV", "dark_green"));
 
         for (PermitGroup permit : permits) {
             SQLiteStatement statement = db.compileStatement(INSERT_PERMIT_GROUP);
