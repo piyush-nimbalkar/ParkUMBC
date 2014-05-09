@@ -9,6 +9,8 @@ import model.PermitGroup;
 
 import java.util.ArrayList;
 
+import static com.example.parkumbc.Constant.PERMIT_GROUPS;
+
 public class PermitGroupActivity extends Activity implements AdapterView.OnItemClickListener {
 
     @Override
@@ -17,7 +19,7 @@ public class PermitGroupActivity extends Activity implements AdapterView.OnItemC
         setContentView(R.layout.activity_permit_group);
         ListView listview = (ListView) findViewById(R.id.listViewPermitGroups);
 
-        ArrayList<PermitGroup> permitGroups = getIntent().getParcelableArrayListExtra("PermitGroups");
+        ArrayList<PermitGroup> permitGroups = getIntent().getParcelableArrayListExtra(PERMIT_GROUPS);
 
         final PermitArrayAdapter adapter = new PermitArrayAdapter(this, permitGroups);
         listview.setAdapter(adapter);

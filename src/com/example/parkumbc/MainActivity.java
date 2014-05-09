@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.TextView;
 import model.ParkingLot;
-import model.PermitGroup;
 import repository.Repository;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +19,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.List;
+
+import static com.example.parkumbc.Constant.PERMIT_GROUPS;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -144,7 +145,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.permit_button:
                 Intent intent = new Intent(context, PermitGroupActivity.class);
-                intent.putParcelableArrayListExtra("PermitGroups", repository.getPermitGroups());
+                intent.putParcelableArrayListExtra(PERMIT_GROUPS, repository.getPermitGroups());
                 startActivity(intent);
                 break;
             default:
