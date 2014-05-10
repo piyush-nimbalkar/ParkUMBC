@@ -1,10 +1,12 @@
 package model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-public class ParkingLot {
+public class ParkingLot implements Parcelable {
 
     private long lot_id;
     private String name;
@@ -18,6 +20,13 @@ public class ParkingLot {
         this.name = name;
         this.current_count = current_count;
         this.capacity = capacity;
+    }
+
+    public ParkingLot(Parcel in) {
+        lot_id = in.readLong();
+        name = in.readString();
+        current_count = in.readLong();
+        capacity = in.readLong();
     }
 
     public long getLotId() {
@@ -65,5 +74,30 @@ public class ParkingLot {
         else
             return new LatLng(latitude, longitude);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeLong(lot_id);
+        out.writeString(name);
+        out.writeLong(current_count);
+        out.writeLong(capacity);
+    }
+
+    public static final Parcelable.Creator<PermitGroup> CREATOR = new Parcelable.Creator<PermitGroup>() {
+
+        public PermitGroup createFromParcel(Parcel in) {
+            return new PermitGroup(in);
+        }
+
+        public PermitGroup[] newArray(int size) {
+            return new PermitGroup[size];
+        }
+
+    };
 
 }

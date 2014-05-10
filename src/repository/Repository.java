@@ -29,7 +29,7 @@ public class Repository {
         return true;
     }
 
-    public List<ParkingLot> getParkingLots() {
+    public ArrayList<ParkingLot> getParkingLots() {
         Log.d(TAG, "In Repository.java");
         return dataStorage.getParkingLots();
     }

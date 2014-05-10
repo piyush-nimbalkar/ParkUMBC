@@ -191,10 +191,10 @@ public class DataStorage extends SQLiteOpenHelper {
         statement.executeInsert();
     }
 
-    public List<ParkingLot> getParkingLots() {
+    public ArrayList<ParkingLot> getParkingLots() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_PARKING_LOT, null);
-        List<ParkingLot> lots = new ArrayList<ParkingLot>();
+        ArrayList<ParkingLot> lots = new ArrayList<ParkingLot>();
 
         if (c != null) {
             if (c.moveToFirst()) {
