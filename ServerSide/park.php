@@ -64,7 +64,11 @@ for ($i = 0; $i < $count; $i++) {
     $reg_ids[] = mysql_result($result, $i, "RegistrationId");
 }
 
-$message = array("parking_lot_id" => $lot_id);
+$sql = "SELECT Name FROM parking_lot where LotId = $lot_id";
+$result = mysql_query($sql, $connection);
+$lot_name = mysql_result($result, 0, "Name");
+
+$message = array("parking_lot_id" => $lot_id, "parking_lot_name" => $lot_name);
 send_notification($reg_ids, $message);
 
 mysql_close($connection);
