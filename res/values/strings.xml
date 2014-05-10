@@ -16,6 +16,7 @@
     <string name="parking_class">Parking Class</string>
     <string name="about">About</string>
     <string name="feedback">Feedback</string>
-    <string name="search_button">SEARCH</string>
+    <string name="notify_button">NOTIFY</string>
     <string name="permit_button">PERMIT</string>
+
 </resources>

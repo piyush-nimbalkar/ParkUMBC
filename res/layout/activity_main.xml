@@ -24,7 +24,7 @@
             android:gravity="center"
             android:layout_weight="1"
             android:textColor="#ffffff"
-            android:text="@string/search_button" />
+            android:text="@string/notify_button" />
 
         <TextView
             android:id="@+id/park_button"
