@@ -16,8 +16,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import model.PermitGroup;
 
-//import storage.Seeds;
-
 public class DataStorage extends SQLiteOpenHelper {
 
     private static final String TAG = "DATABASE";
@@ -178,7 +176,7 @@ public class DataStorage extends SQLiteOpenHelper {
     }
 
     private void createParkingPermits(SQLiteDatabase db) {
-        long[][] parking_permit_relation = {{1, 1}, {1, 2}, {1, 5}, {2, 1}, {2, 2}, {2, 4}};
+        long[][] parking_permit_relation = Seeds.getParkingPermitData();
 
         for (int i = 0; i < parking_permit_relation.length; i++) {
             SQLiteStatement statement = db.compileStatement(INSERT_PARKING_PERMIT);

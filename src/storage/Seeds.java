@@ -1,7 +1,5 @@
 package storage;
 
-import android.database.sqlite.SQLiteStatement;
-import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import model.ParkingLot;
 import model.PermitGroup;
@@ -332,4 +330,32 @@ public final class Seeds {
 
         return parkingLots;
     }
+
+    static long[][] getParkingPermitData() {
+        return new long[][]{
+                {1, 1}, {1, 4}, {1, 9},
+                {2, 5}, {2, 9},
+                {3, 1},
+                {4, 1}, {4, 9},
+                {5, 3}, {5, 9},
+                {6, 7}, {6, 9},
+                {7, 4}, {7, 5},
+                {8, 7}, {8, 9},
+                {9, 1},
+                {10, 9},
+                {11, 3},
+                {12, 2},
+                {13, 1},
+                {14, 1}, {14, 3}, {14, 9},
+                {15, 4},
+                {16, 1}, {16, 3}, {16, 4}, {16, 5}, {16, 9},
+                {17, 9},
+                {18, 1}, {18, 8},
+                {19, 9}, {19, 10},
+                {20, 1}, {20, 7}, {20, 9},
+                {21, 3}, {21, 5}, {21, 7},
+                {22, 5}, {22, 7}, {22, 9},
+                {23, 6}};
+    }
+
 }
