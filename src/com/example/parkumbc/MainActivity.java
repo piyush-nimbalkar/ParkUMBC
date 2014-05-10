@@ -134,14 +134,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private double calculateClosest(LatLng p) {
         double min_dist = Double.MAX_VALUE, tmp_dist;
+        ParkingLot lot = null;
         Log.d(TAG, "POINT:" + p.latitude + " " + p.longitude);
         Log.d(TAG, "PARKING LOTS: " + parkingLots.size());
         for (int i = 0; i < parkingLots.size(); i++) {
             tmp_dist = getDistance(parkingLots.get(i), p);
-            if (tmp_dist < min_dist)
+            if (tmp_dist < min_dist){
                 min_dist = tmp_dist;
+                lot = parkingLots.get(i);
+            }
+
 
         }
+        Log.d(TAG,"CLOSEST LOT IS " + min_dist + " FROM HERE in " + lot.getLotName());
         return min_dist;
     }
 
@@ -150,14 +155,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (locationTracker.canGetLocation()) {
             double latitude = locationTracker.getLatitude();
             double longitude = locationTracker.getLongitude();
+            LatLng dummy = new LatLng(39.253412, -76.703861);
             TextView parkButton = (TextView) findViewById(R.id.park_button);
 
             if (parkButton.getText() == getString(R.string.park)) {
                 repository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), true);
                 parkButton.setText(getString(R.string.checkout));
                 LatLng current_location = new LatLng(latitude, longitude);
-                double min_dist = calculateClosest(current_location);
-                Log.d(TAG,"CLOSEST LOT IS " + min_dist + " FROM HERE");
+                double min_dist = calculateClosest(dummy);
                 Toast.makeText(context, getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
                 current_count += 1;
             } else {

@@ -50,12 +50,6 @@ public final class Seeds {
         corners_two.add(new LatLng(39.254356, -76.707991));
         corners_two.add(new LatLng(39.254646, -76.707734));
 
-        ArrayList<LatLng> corners_three = new ArrayList<LatLng>();
-        corners_three.add(new LatLng(39.260121, -76.697823));
-        corners_three.add(new LatLng(39.260501, -76.697426));
-        corners_three.add(new LatLng(39.260445, -76.697340));
-        corners_three.add(new LatLng(39.260069, -76.697737));
-
         ArrayList<LatLng> corners_four = new ArrayList<LatLng>();
         corners_four.add(new LatLng(39.254618, -76.704357));
         corners_four.add(new LatLng(39.254335, -76.703821));
@@ -64,10 +58,12 @@ public final class Seeds {
         corners_four.add(new LatLng(39.254269, -76.704754));
 
         ArrayList<LatLng> corners_five = new ArrayList<LatLng>();
-        corners_five.add(new LatLng(39.255686, -76.701346));
-        corners_five.add(new LatLng(39.255229, -76.700799));
-        corners_five.add(new LatLng(39.254718, -76.701195));
-        corners_five.add(new LatLng(39.255545, -76.701828));
+        corners_five.add(new LatLng(39.255090, -76.702960));
+        corners_five.add(new LatLng(39.254409, -76.702466));
+        corners_five.add(new LatLng(39.254716, -76.701715));
+        corners_five.add(new LatLng(39.254575, -76.701587));
+        corners_five.add(new LatLng(39.254035, -76.702724));
+        corners_five.add(new LatLng(39.254899, -76.703368));
 
         ArrayList<LatLng> corners_six = new ArrayList<LatLng>();
         corners_six.add(new LatLng(39.259118, -76.698454));
@@ -211,6 +207,12 @@ public final class Seeds {
         corners_twentyfive.add(new LatLng(39.259981, -76.713737));
         corners_twentyfive.add(new LatLng(39.260762, -76.715046));
 
+        ArrayList<LatLng> corners_twentysix = new ArrayList<LatLng>();
+        corners_twentysix.add(new LatLng(39.236023, -76.712895));
+        corners_twentysix.add(new LatLng(39.235973, -76.712509));
+        corners_twentysix.add(new LatLng(39.235475, -76.712359));
+        corners_twentysix.add(new LatLng(39.235408, -76.712938));
+        corners_twentysix.add(new LatLng(39.235890, -76.713067));
 
         ParkingLot parkingLot = new ParkingLot(1, "Commons", 0, 3);
         parkingLot.setCorners(corners_one);
@@ -220,15 +222,11 @@ public final class Seeds {
         parkingLot.setCorners(corners_two);
         parkingLots.add(parkingLot);
 
-        parkingLot = new ParkingLot(3, "Drayton Lot", 0, 4);
-        parkingLot.setCorners(corners_three);
-        parkingLots.add(parkingLot);
-
         parkingLot = new ParkingLot(4, "Lot 24", 0, 4);
         parkingLot.setCorners(corners_four);
         parkingLots.add(parkingLot);
 
-        parkingLot = new ParkingLot(5, "TRC Lot", 0, 4);
+        parkingLot = new ParkingLot(5, "Lot 25", 0, 4);
         parkingLot.setCorners(corners_five);
         parkingLots.add(parkingLot);
 
@@ -310,6 +308,10 @@ public final class Seeds {
 
         parkingLot = new ParkingLot(25, "Lot 20", 0, 4);
         parkingLot.setCorners(corners_twentyfive);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(26, "Satellite Lot 2", 0, 4);
+        parkingLot.setCorners(corners_twentysix);
         parkingLots.add(parkingLot);
 
         return parkingLots;
