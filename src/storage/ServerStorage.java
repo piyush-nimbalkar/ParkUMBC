@@ -19,6 +19,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 public class ServerStorage extends AsyncTask<String, Void, ServerResponse> {
 
+    static final String TAG = "STORAGE_SERVER";
     private long parking_lot_id;
     private boolean is_parked;
 
@@ -61,7 +62,7 @@ public class ServerStorage extends AsyncTask<String, Void, ServerResponse> {
     @Override
     protected void onPostExecute(ServerResponse response) {
         super.onPostExecute(response);
-        Log.d("SERVER", response.getMessage());
+        Log.d(TAG, response.getMessage());
     }
 
     public void store(long parking_lot_id, boolean is_parked) {

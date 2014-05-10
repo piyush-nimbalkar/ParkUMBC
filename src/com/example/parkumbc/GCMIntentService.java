@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.android.gcm.GCMBaseIntentService;
 import storage.ServerResponse;
 
+import static com.example.parkumbc.Constant.PARKING_LOT_ID;
 import static com.example.parkumbc.Constant.SENDER_ID;
 
 public class GCMIntentService extends GCMBaseIntentService {
@@ -30,6 +31,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onMessage(Context context, Intent intent) {
+        Log.d(TAG, intent.getExtras().getString(PARKING_LOT_ID));
     }
 
     @Override
