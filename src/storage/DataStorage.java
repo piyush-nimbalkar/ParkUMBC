@@ -36,6 +36,8 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_CURRENT_COUNT = "current_count";
     private static final String COLUMN_CAPACITY = "capacity";
+    private static final String COLUMN_ENTRANCE_LATITUDE = "entrance_latitude";
+    private static final String COLUMN_ENTRANCE_LONGITUDE = "entrance_longitude";
     private static final String COLUMN_CORNER_INDEX = "corner_index";
     private static final String COLUMN_PERMIT_GROUP_ID = "permit_group_id";
     private static final String COLUMN_PERMIT_LETTER = "letter";
@@ -54,7 +56,9 @@ public class DataStorage extends SQLiteOpenHelper {
             COLUMN_PARKING_LOT_ID + " INTEGER PRIMARY KEY, " +
             COLUMN_NAME + " VARCHAR(200), " +
             COLUMN_CURRENT_COUNT + " TEXT, " +
-            COLUMN_CAPACITY + " TEXT );";
+            COLUMN_CAPACITY + " TEXT," +
+            COLUMN_ENTRANCE_LATITUDE + " TEXT," +
+            COLUMN_ENTRANCE_LONGITUDE + " TEXT );";
 
     private static final String CREATE_CORNER_TABLE = "CREATE TABLE " +
             TABLE_CORNER + " (" +
@@ -90,7 +94,9 @@ public class DataStorage extends SQLiteOpenHelper {
             COLUMN_PARKING_LOT_ID + "," +
             COLUMN_NAME + "," +
             COLUMN_CURRENT_COUNT + "," +
-            COLUMN_CAPACITY + ") VALUES (?, ?, ?, ?)";
+            COLUMN_CAPACITY + "," +
+            COLUMN_ENTRANCE_LATITUDE + "," +
+            COLUMN_ENTRANCE_LONGITUDE + ") VALUES (?, ?, ?, ?, ?, ?)";
 
     private static final String INSERT_CORNER = "INSERT INTO " +
             TABLE_CORNER + " (" +
@@ -137,6 +143,8 @@ public class DataStorage extends SQLiteOpenHelper {
             statement.bindString(2, lot.getLotName());
             statement.bindLong(3, lot.getCurrentCount());
             statement.bindLong(4, lot.getCapacity());
+            statement.bindString(5, String.valueOf(lot.getEntrance().latitude));
+            statement.bindString(6, String.valueOf(lot.getEntrance().longitude));
             statement.executeInsert();
             create_parking_corners(db, lot);
         }
@@ -204,8 +212,12 @@ public class DataStorage extends SQLiteOpenHelper {
                     long count = c.getLong(c.getColumnIndex(COLUMN_CURRENT_COUNT));
                     long capacity = c.getLong(c.getColumnIndex(COLUMN_CAPACITY));
 
+                    double entrance_lat = Double.parseDouble(c.getString(c.getColumnIndex(COLUMN_ENTRANCE_LATITUDE)));
+                    double entrance_lng = Double.parseDouble(c.getString(c.getColumnIndex(COLUMN_ENTRANCE_LONGITUDE)));
+
                     ParkingLot lot = new ParkingLot(lotId, name, count, capacity);
                     lot.setCorners(getCorners(db, lotId));
+                    lot.setEntrance(entrance_lat, entrance_lng);
                     lot.setPermitGroups(getPermitGroups(db, lotId));
 
                     lots.add(lot);

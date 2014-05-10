@@ -13,6 +13,7 @@ public class ParkingLot implements Parcelable {
     private long current_count;
     private long capacity;
     private ArrayList<LatLng> corners;
+    private LatLng entrance;
     private ArrayList<PermitGroup> permitGroups;
 
     public ParkingLot() {
@@ -25,6 +26,7 @@ public class ParkingLot implements Parcelable {
         this.name = name;
         this.current_count = current_count;
         this.capacity = capacity;
+        this.entrance = null;
     }
 
     public ParkingLot(Parcel in) {
@@ -34,6 +36,7 @@ public class ParkingLot implements Parcelable {
         current_count = in.readLong();
         capacity = in.readLong();
         in.readTypedList(corners, LatLng.CREATOR);
+        entrance = in.readParcelable(LatLng.class.getClassLoader());
         in.readTypedList(permitGroups, PermitGroup.CREATOR);
     }
 
@@ -57,12 +60,21 @@ public class ParkingLot implements Parcelable {
         return corners;
     }
 
+    public LatLng getEntrance() {
+        return entrance;
+    }
+
     public ArrayList<PermitGroup> getPermitGroups() {
         return permitGroups;
     }
 
     public void setCorners(ArrayList<LatLng> corners) {
         this.corners = corners;
+    }
+
+    public void setEntrance(double lat, double lng) {
+        LatLng entrance = new LatLng(lat, lng);
+        this.entrance = entrance;
     }
 
     public void setPermitGroups(ArrayList<PermitGroup> permitGroups) {
@@ -95,6 +107,7 @@ public class ParkingLot implements Parcelable {
         out.writeLong(current_count);
         out.writeLong(capacity);
         out.writeTypedList(corners);
+        out.writeParcelable(entrance, flags);
         out.writeTypedList(permitGroups);
     }
 

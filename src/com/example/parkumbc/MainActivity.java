@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 import static com.example.parkumbc.Constant.*;
 
@@ -35,6 +36,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final int THRESHOLD = 1;
     private static final int REQUEST_CODE = 1;
     private static final String TAG = "MAIN_ACTIVITY";
+    private static final double PI = 3.141592653589793;
+    private static final double RADIUS = 6378.16;
 
     private Context context;
 
@@ -46,16 +49,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private PermitGroup permitGroup;
 
     private int current_count = 0;
-
-    double coord[][][] = {{{39.25531666, -76.71158333},
-            {39.255, -76.710483333},
-            {39.254633333, -76.710666667},
-            {39.254616667, -76.710766667},
-            {39.2545, -76.7109},
-            {39.2544, -76.710983333},
-            {39.254483333, -76.71125},
-            {39.2549, -76.711016667},
-            {39.2551, -76.7116}}};
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -103,56 +96,34 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .icon(BitmapDescriptorFactory.defaultMarker(color)));
     }
 
-    private double squaredLength(LatLng a, LatLng b) {
-        return Math.pow((a.latitude - b.latitude), 2) + Math.pow((a.latitude - b.longitude), 2);
-    }
-
-    private double distanceFromSideSquared(LatLng a, LatLng b, LatLng p) {
-        double tmp = squaredLength(a, b);
-        if (tmp == 0.0)
-            return squaredLength(p, a);
-        double t = (p.latitude - a.latitude) * (b.latitude - a.latitude) +  (p.longitude - a.longitude) * (b.longitude - a.longitude)/ tmp;
-        if (t < 0.0)
-            return squaredLength(p, a);
-        if (t > 1.0)
-            return squaredLength(p, b);
-        return squaredLength(p, new LatLng((a.latitude + t * (b.latitude - a.latitude)),
-                (a.longitude + t * (b.longitude - a.longitude))));
-    }
-
-    private double distanceFromSide(LatLng a, LatLng b, LatLng p){
-        return Math.sqrt(distanceFromSideSquared(a, b, p));
+    public static double radians(double x){
+        return x * PI/180;
     }
 
     private  double getDistance(ParkingLot parkingLot, LatLng p){
-        double min_dist = Double.MAX_VALUE, tmp_dist;
-        ArrayList<LatLng> corners = parkingLot.getCorners();
-        Log.d(TAG, "Parking Lot: " + parkingLot.getLotName());
-        for (int i = 0; i < corners.size(); i++){
-            tmp_dist = distanceFromSide(corners.get(i), corners.get((i+1)%corners.size()), p);
-            Log.d(TAG, "Dist: " + tmp_dist);
-            if (tmp_dist < min_dist)
-                min_dist = tmp_dist;
-        }
-        return min_dist;
+        LatLng entrance = parkingLot.getEntrance();
+        double dlong = radians(p.longitude - entrance.longitude);
+        double dlat = radians(p.latitude - entrance.latitude);
+        double a = (Math.sin(dlat/2) * Math.sin(dlat/2)) +
+                    Math.cos(radians(entrance.latitude)) * Math.cos(radians(p.latitude)) *
+                    (Math.sin(dlong/2) * Math.sin(dlong/2));
+        double angle = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return angle * RADIUS;
     }
 
-    private double calculateClosest(LatLng p) {
-        double min_dist = Double.MAX_VALUE, tmp_dist;
-        ParkingLot lot = null;
+    private void findClosest(LatLng p){
+        TreeMap<Double, ParkingLot> closest = new TreeMap<Double, ParkingLot>();
+
         Log.d(TAG, "POINT:" + p.latitude + " " + p.longitude);
         Log.d(TAG, "PARKING LOTS: " + parkingLots.size());
-        for (int i = 0; i < parkingLots.size(); i++) {
-            tmp_dist = getDistance(parkingLots.get(i), p);
-            if (tmp_dist < min_dist){
-                min_dist = tmp_dist;
-                lot = parkingLots.get(i);
-            }
 
-
+        for (ParkingLot parkingLot : parkingLots) {
+            closest.put(getDistance(parkingLot, p), parkingLot);
         }
-        Log.d(TAG,"CLOSEST LOT IS " + min_dist + " FROM HERE in " + lot.getLotName());
-        return min_dist;
+        for (Object key : closest.keySet().toArray()) {
+            ParkingLot value = closest.get(key);
+            Log.d(TAG,"LOT: " + value.getLotName() + " - " + key);
+        }
     }
 
     private void reportParking() {
@@ -160,14 +131,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (locationTracker.canGetLocation()) {
             double latitude = locationTracker.getLatitude();
             double longitude = locationTracker.getLongitude();
-            LatLng dummy = new LatLng(39.253412, -76.703861);
             TextView parkButton = (TextView) findViewById(R.id.park_button);
 
             if (parkButton.getText() == getString(R.string.park)) {
                 repository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), true);
                 parkButton.setText(getString(R.string.checkout));
+
                 LatLng current_location = new LatLng(latitude, longitude);
-                double min_dist = calculateClosest(dummy);
+                findClosest(current_location);
                 Toast.makeText(context, getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
                 current_count += 1;
             } else {
@@ -182,15 +153,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 for (ParkingLot lot : parkingLots) {
                     addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
                 }
-//                addPolygon(parkingLots.get(0), BitmapDescriptorFactory.HUE_GREEN);
-//                addPolygon(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
             } else {
                 map.clear();
                 for (ParkingLot lot : parkingLots) {
                     addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
                 }
                 addPolygon(parkingLots.get(0), BitmapDescriptorFactory.HUE_RED);
-//                addPolygon(parkingLots.get(1), BitmapDescriptorFactory.HUE_GREEN);
             }
         } else {
             Log.d(TAG, "PROMPT");
