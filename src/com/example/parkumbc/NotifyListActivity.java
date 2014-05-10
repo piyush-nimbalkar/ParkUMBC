@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import model.ParkingLot;
 
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.example.parkumbc.Constant.PARKING_LOTS;
+import static com.example.parkumbc.Constant.SELECTION_COLOR;
 
 public class NotifyListActivity extends Activity implements AdapterView.OnItemClickListener {
 
@@ -35,14 +35,23 @@ public class NotifyListActivity extends Activity implements AdapterView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, parkingLots.get(position).getLotName(), Toast.LENGTH_SHORT).show();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Set<String> newSelectedLots = new HashSet<String>();
+        SharedPreferences.Editor editor = preferences.edit();
+
         Set<String> oldLots = preferences.getStringSet(PARKING_LOTS, null);
+        Set<String> newSelectedLots = new HashSet<String>();
+        String lotName = parkingLots.get(position).getLotName();
         if (oldLots != null)
             newSelectedLots.addAll(oldLots);
-        newSelectedLots.add(parkingLots.get(position).getLotName());
-        SharedPreferences.Editor editor = preferences.edit();
+
+        if (oldLots != null && oldLots.contains(lotName)) {
+            newSelectedLots.remove(lotName);
+            view.setBackgroundColor(0xFFFFFFFF);
+        } else {
+            newSelectedLots.add(lotName);
+            view.setBackgroundColor(SELECTION_COLOR);
+        }
+
         editor.putStringSet(PARKING_LOTS, newSelectedLots);
         editor.commit();
     }

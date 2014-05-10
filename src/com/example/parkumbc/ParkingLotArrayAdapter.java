@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import static com.example.parkumbc.Constant.PARKING_LOTS;
+import static com.example.parkumbc.Constant.SELECTION_COLOR;
 
 public class ParkingLotArrayAdapter extends ArrayAdapter<ParkingLot> {
 
@@ -35,7 +36,7 @@ public class ParkingLotArrayAdapter extends ArrayAdapter<ParkingLot> {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         Set<String> lots = preferences.getStringSet(PARKING_LOTS, null);
         if (lots != null && lots.contains(values.get(position).getLotName()))
-            rowView.setBackgroundColor(0xFFA2D1E9);
+            rowView.setBackgroundColor(SELECTION_COLOR);
 
         textViewPermitName.setText(values.get(position).getLotName());
         return rowView;
