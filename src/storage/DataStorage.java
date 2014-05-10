@@ -16,6 +16,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import model.PermitGroup;
 
+//import storage.Seeds;
+
 public class DataStorage extends SQLiteOpenHelper {
 
     private static final String TAG = "DATABASE";
@@ -365,18 +367,7 @@ public class DataStorage extends SQLiteOpenHelper {
     }
 
     private void createPermitGroups(SQLiteDatabase db) {
-        List<PermitGroup> permits = new ArrayList<PermitGroup>();
-
-        permits.add(new PermitGroup(1, "Commuter Student", "A", "red"));
-        permits.add(new PermitGroup(2, "Walker Community Student", "B", "green"));
-        permits.add(new PermitGroup(3, "Residential Student (Besides Walker)", "C", "yellow"));
-        permits.add(new PermitGroup(4, "Faculty/Staff", "D", "violet"));
-        permits.add(new PermitGroup(5, "Gated Faculty/Staff", "E", "violet"));
-        permits.add(new PermitGroup(6, "Freshman Resident Student", "F", "orange"));
-        permits.add(new PermitGroup(7, "Visitor Parking (Metered Spaces)", "P", "blue"));
-        permits.add(new PermitGroup(8, "Event Visitor Parking", "PE", "blue"));
-        permits.add(new PermitGroup(9, "Handicap Accessible Parking", "PH", "blue"));
-        permits.add(new PermitGroup(10, "Electric Vehicle Charging Station", "EV", "dark_green"));
+        List<PermitGroup> permits = Seeds.getPermitGroupData();
 
         for (PermitGroup permit : permits) {
             SQLiteStatement statement = db.compileStatement(INSERT_PERMIT_GROUP);
