@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.os.Build;
 import android.util.Log;
@@ -74,12 +75,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         for (ParkingLot lot : parkingLots)
             addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
 
-        TextView parkButton = (TextView) findViewById(R.id.park_button);
-        TextView permitButton = (TextView) findViewById(R.id.permit_button);
-        TextView notifyButton = (TextView) findViewById(R.id.notify_button);
+        ImageButton notifyButton = (ImageButton) findViewById(R.id.notify_button);
+        ImageButton parkButton = (ImageButton) findViewById(R.id.park_button);
+        ImageButton permitButton = (ImageButton) findViewById(R.id.permit_button);
+        TextView notifyButtonText = (TextView) findViewById(R.id.notify_button_text);
+        TextView parkButtonText = (TextView) findViewById(R.id.park_button_text);
+        TextView permitButtonText = (TextView) findViewById(R.id.permit_button_text);
+
+        notifyButton.setOnClickListener(this);
         parkButton.setOnClickListener(this);
         permitButton.setOnClickListener(this);
-        notifyButton.setOnClickListener(this);
+        notifyButtonText.setOnClickListener(this);
+        parkButtonText.setOnClickListener(this);
+        permitButtonText.setOnClickListener(this);
     }
 
     private void addPolygon(ParkingLot lot, float color) {
@@ -162,11 +170,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (locationTracker.canGetLocation()) {
             double latitude = locationTracker.getLatitude();
             double longitude = locationTracker.getLongitude();
-            TextView parkButton = (TextView) findViewById(R.id.park_button);
+            TextView parkButtonText = (TextView) findViewById(R.id.park_button_text);
 
-            if (parkButton.getText() == getString(R.string.park)) {
+            if (parkButtonText.getText() == getString(R.string.park)) {
                 repository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), true);
-                parkButton.setText(getString(R.string.checkout));
+                parkButtonText.setText(getString(R.string.checkout));
 
                 LatLng current_location = new LatLng(latitude, longitude);
                 findClosest(current_location);
@@ -174,7 +182,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 current_count += 1;
             } else {
                 repository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), false);
-                parkButton.setText(getString(R.string.park));
+                parkButtonText.setText(getString(R.string.park));
                 Toast.makeText(context, R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
                 current_count -= 1;
             }
@@ -202,14 +210,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Intent intent;
         switch (view.getId()) {
             case R.id.park_button:
+            case R.id.park_button_text:
                 reportParking();
                 break;
             case R.id.permit_button:
+            case R.id.permit_button_text:
                 intent = new Intent(context, PermitGroupActivity.class);
                 intent.putParcelableArrayListExtra(PERMIT_GROUPS, repository.getPermitGroups());
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.notify_button:
+            case R.id.notify_button_text:
                 intent = new Intent(context, NotifyListActivity.class);
                 intent.putParcelableArrayListExtra(PARKING_LOTS, repository.getParkingLots());
                 startActivity(intent);

@@ -13,35 +13,73 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#444444"
+        android:layout_height="70dp"
+        android:background="#FF8900"
         android:layout_gravity="bottom">
 
-        <TextView
+        <ImageButton
             android:id="@+id/notify_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_weight="1"
-            android:textColor="#ffffff"
-            android:text="@string/notify_button" />
+            android:textColor="#000000"
+            android:background="#FF8900" />
 
-        <TextView
+        <ImageButton
             android:id="@+id/park_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="10dp"
             android:gravity="center"
+            android:src="@drawable/ic_park"
             android:layout_weight="1"
-            android:textColor="#ffffff"
-            android:text="@string/park" />
+            android:background="#FF8900"
+            android:textColor="#000000" />
 
-        <TextView
+        <ImageButton
             android:id="@+id/permit_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_weight="1"
-            android:textColor="#ffffff"
+            android:background="#FF8900"
+            android:textColor="#000000" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#FF8900"
+        android:layout_gravity="bottom">
+
+        <TextView
+            android:id="@+id/notify_button_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:text="@string/notify_button" />
+
+        <TextView
+            android:id="@+id/park_button_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:text="@string/park" />
+
+        <TextView
+            android:id="@+id/permit_button_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textColor="#000000"
             android:text="@string/permit_button" />
 
     </LinearLayout>
