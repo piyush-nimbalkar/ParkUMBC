@@ -187,17 +187,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 current_count -= 1;
             }
 
+            map.clear();
             if (current_count < THRESHOLD) {
-                map.clear();
-                for (ParkingLot lot : parkingLots) {
+                for (ParkingLot lot : parkingLots)
                     addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
-                }
             } else {
-                map.clear();
                 for (ParkingLot lot : parkingLots) {
-                    addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
+                    if (lot.getLotId() == parkingLots.get(0).getLotId())
+                        addPolygon(lot, BitmapDescriptorFactory.HUE_RED);
+                    else
+                        addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
                 }
-                addPolygon(parkingLots.get(0), BitmapDescriptorFactory.HUE_RED);
             }
         } else {
             Log.d(TAG, "PROMPT");
