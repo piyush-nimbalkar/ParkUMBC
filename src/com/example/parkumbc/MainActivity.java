@@ -1,7 +1,9 @@
 package com.example.parkumbc;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -38,6 +40,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final String TAG = "MAIN_ACTIVITY";
     private static final double PI = 3.141592653589793;
     private static final double RADIUS = 6378.16;
+    private AlertDialog selectLotDialog;
 
     private Context context;
 
@@ -96,23 +99,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .icon(BitmapDescriptorFactory.defaultMarker(color)));
     }
 
-    public static double radians(double x){
-        return x * PI/180;
+    public static double radians(double x) {
+        return x * PI / 180;
     }
 
-    private  double getDistance(ParkingLot parkingLot, LatLng p){
+    private double getDistance(ParkingLot parkingLot, LatLng p) {
         LatLng entrance = parkingLot.getEntrance();
         double dlong = radians(p.longitude - entrance.longitude);
         double dlat = radians(p.latitude - entrance.latitude);
-        double a = (Math.sin(dlat/2) * Math.sin(dlat/2)) +
-                    Math.cos(radians(entrance.latitude)) * Math.cos(radians(p.latitude)) *
-                    (Math.sin(dlong/2) * Math.sin(dlong/2));
+        double a = (Math.sin(dlat / 2) * Math.sin(dlat / 2)) +
+                Math.cos(radians(entrance.latitude)) * Math.cos(radians(p.latitude)) *
+                        (Math.sin(dlong / 2) * Math.sin(dlong / 2));
         double angle = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return angle * RADIUS;
     }
 
-    private void findClosest(LatLng p){
+    private void findClosest(LatLng p) {
         TreeMap<Double, ParkingLot> closest = new TreeMap<Double, ParkingLot>();
+        ArrayList<String> temp = new ArrayList<String>();
 
         Log.d(TAG, "POINT:" + p.latitude + " " + p.longitude);
         Log.d(TAG, "PARKING LOTS: " + parkingLots.size());
@@ -122,8 +126,35 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         for (Object key : closest.keySet().toArray()) {
             ParkingLot value = closest.get(key);
-            Log.d(TAG,"LOT: " + value.getLotName() + " - " + key);
+            if (temp.size() < 3)
+                temp.add(value.getLotName());
         }
+        showDialog(temp);
+    }
+
+    private void showDialog(ArrayList<String> contents) {
+        CharSequence[] closestLots = {contents.get(0), contents.get(1), contents.get(2)};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Parking Lot");
+        builder.setSingleChoiceItems(closestLots, -1, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                switch (item) {
+                    case 0:
+                        Toast.makeText(context, "first", Toast.LENGTH_LONG).show();
+                        break;
+                    case 1:
+                        Toast.makeText(context, "second", Toast.LENGTH_LONG).show();
+                        break;
+                    case 2:
+                        Toast.makeText(context, "third", Toast.LENGTH_LONG).show();
+                        break;
+
+                }
+                selectLotDialog.dismiss();
+            }
+        });
+        selectLotDialog = builder.create();
+        selectLotDialog.show();
     }
 
     private void reportParking() {
