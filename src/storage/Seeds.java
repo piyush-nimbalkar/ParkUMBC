@@ -28,7 +28,7 @@ public final class Seeds {
         return permits;
     }
 
-    static List<ParkingLot> getParkingLotData(){
+    static List<ParkingLot> getParkingLotData() {
         List<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
 
         ArrayList<LatLng> corners_one = new ArrayList<LatLng>();
@@ -214,104 +214,120 @@ public final class Seeds {
         corners_twentysix.add(new LatLng(39.235408, -76.712938));
         corners_twentysix.add(new LatLng(39.235890, -76.713067));
 
-        ParkingLot parkingLot = new ParkingLot(1, "Commons", 0, 3);
-        parkingLot.setCorners(corners_one);
-        parkingLots.add(parkingLot);
 
-        parkingLot = new ParkingLot(2, "Lot 3", 0, 4);
-        parkingLot.setCorners(corners_two);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(4, "Lot 24", 0, 4);
-        parkingLot.setCorners(corners_four);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(5, "Lot 25", 0, 4);
-        parkingLot.setCorners(corners_five);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(6, "4805 Lot", 0, 4);
-        parkingLot.setCorners(corners_six);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(7, "Lot 23", 0, 4);
-        parkingLot.setCorners(corners_seven);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(8, "Parking Services", 0, 4);
-        parkingLot.setCorners(corners_eight);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(9, "Stadium Lot 1", 0, 4);
-        parkingLot.setCorners(corners_nine);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(10, "Stadium Lot 2", 0, 4);
-        parkingLot.setCorners(corners_ten);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(11, "Lot 1", 0, 4);
+        ParkingLot parkingLot = new ParkingLot(1, "Lot 1", 0, 4);
         parkingLot.setCorners(corners_eleven);
+        parkingLot.setEntrance(39.253760, -76.709035);
         parkingLots.add(parkingLot);
 
-        parkingLot = new ParkingLot(12, "Lot 2", 0, 4);
+        parkingLot = new ParkingLot(2, "Lot 2", 0, 4);
         parkingLot.setCorners(corners_twelve);
+        parkingLot.setEntrance(39.253843, -76.709100);
         parkingLots.add(parkingLot);
 
-        parkingLot = new ParkingLot(13, "Lot 4", 0, 4);
+        parkingLot = new ParkingLot(3, "Lot 3", 0, 4);
+        parkingLot.setCorners(corners_two);
+        parkingLot.setEntrance(39.254574, -76.707748);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(4, "Lot 4", 0, 4);
         parkingLot.setCorners(corners_thirteen);
+        parkingLot.setEntrance(39.254665, -76.707930);
         parkingLots.add(parkingLot);
 
-        parkingLot = new ParkingLot(14, "Commons Garage", 0, 4);
-        parkingLot.setCorners(corners_fourteen);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(15, "Lot 12", 0, 4);
-        parkingLot.setCorners(corners_fifteen);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(16, "Lot 11", 0, 4);
-        parkingLot.setCorners(corners_sixteen);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(17, "Lot 5", 0, 4);
+        parkingLot = new ParkingLot(5, "Lot 5", 0, 4);
         parkingLot.setCorners(corners_seventeen);
+        parkingLot.setEntrance(39.257829, -76.708507);
         parkingLots.add(parkingLot);
 
-        parkingLot = new ParkingLot(18, "Walker Avenue Garage", 0, 4);
-        parkingLot.setCorners(corners_eighteen);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(19, "Lot 7", 0, 4);
+        parkingLot = new ParkingLot(6, "Lot 7", 0, 4);
         parkingLot.setCorners(corners_nineteen);
+        parkingLot.setEntrance(39.257094, -76.710851);
         parkingLots.add(parkingLot);
 
-        parkingLot = new ParkingLot(20, "Lot 10", 0, 4);
-        parkingLot.setCorners(corners_twenty);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(21, "Admin Drive Garage", 0, 4);
-        parkingLot.setCorners(corners_twentyone);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(22, "Lot 9", 0, 4);
-        parkingLot.setCorners(corners_twentytwo);
-        parkingLots.add(parkingLot);
-
-        parkingLot = new ParkingLot(23, "Lot 8", 0, 4);
+        parkingLot = new ParkingLot(7, "Lot 8", 0, 4);
         parkingLot.setCorners(corners_twentythree);
+        parkingLot.setEntrance(39.256043, -76.715639);
         parkingLots.add(parkingLot);
 
-        parkingLot = new ParkingLot(24, "Lot 22", 0, 4);
-        parkingLot.setCorners(corners_twentyfour);
+        parkingLot = new ParkingLot(8, "Lot 9", 0, 4);
+        parkingLot.setCorners(corners_twentytwo);
+        parkingLot.setEntrance(39.254855, -76.716127);
         parkingLots.add(parkingLot);
 
-        parkingLot = new ParkingLot(25, "Lot 20", 0, 4);
+        parkingLot = new ParkingLot(9, "Lot 10", 0, 4);
+        parkingLot.setCorners(corners_twenty);
+        parkingLot.setEntrance(39.258066, -76.712541);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(10, "Lot 11", 0, 4);
+        parkingLot.setCorners(corners_sixteen);
+        parkingLot.setEntrance(39.256666, -76.707702);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(11, "Lot 12", 0, 4);
+        parkingLot.setCorners(corners_fifteen);
+        parkingLot.setEntrance(39.256654, -76.706812);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(12, "Lot 20", 0, 4);
         parkingLot.setCorners(corners_twentyfive);
+        parkingLot.setEntrance(39.259451, -76.713100);
         parkingLots.add(parkingLot);
 
-        parkingLot = new ParkingLot(26, "Satellite Lot 2", 0, 4);
+        parkingLot = new ParkingLot(13, "Lot 22", 0, 4);
+        parkingLot.setCorners(corners_twentyfour);
+        parkingLot.setEntrance(39.256920, -76.718395);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(14, "Lot 23", 0, 4);
+        parkingLot.setCorners(corners_seven);
+        parkingLot.setEntrance(39.254416, -76.705119);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(15, "Lot 24", 0, 4);
+        parkingLot.setCorners(corners_four);
+        parkingLot.setEntrance(39.253743, -76.704175);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(16, "Lot 25", 0, 4);
+        parkingLot.setCorners(corners_five);
+        parkingLot.setEntrance(39.254192, -76.702319);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(17, "Parking Services", 0, 4);
+        parkingLot.setCorners(corners_eight);
+        parkingLot.setEntrance(39.253868, -76.704647);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(18, "Stadium Lot 1", 0, 4);
+        parkingLot.setCorners(corners_nine);
+        parkingLot.setEntrance(39.253635, -76.706804);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(19, "Stadium Lot 2", 0, 4);
+        parkingLot.setCorners(corners_ten);
+        parkingLot.setEntrance(39.253635, -76.706804);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(20, "Commons Garage", 0, 4);
+        parkingLot.setCorners(corners_fourteen);
+        parkingLot.setEntrance(39.253909, -76.709872);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(21, "Walker Avenue Garage", 0, 4);
+        parkingLot.setCorners(corners_eighteen);
+        parkingLot.setEntrance(39.257510, -76.711592);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(22, "Admin Drive Garage", 0, 4);
+        parkingLot.setCorners(corners_twentyone);
+        parkingLot.setEntrance(39.252493, -76.713496);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(23, "Satellite Lot 2", 0, 4);
         parkingLot.setCorners(corners_twentysix);
+        parkingLot.setEntrance(39.236040, -76.713099);
         parkingLots.add(parkingLot);
 
         return parkingLots;
