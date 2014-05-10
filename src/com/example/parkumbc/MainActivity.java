@@ -1,6 +1,5 @@
 package com.example.parkumbc;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,8 +8,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.os.Build;
 import android.util.Log;
+import com.google.android.gcm.GCMRegistrar;
 import model.ParkingLot;
 import model.PermitGroup;
 import repository.Repository;
@@ -54,7 +53,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private int current_count = 0;
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +86,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         notifyButtonText.setOnClickListener(this);
         parkButtonText.setOnClickListener(this);
         permitButtonText.setOnClickListener(this);
+
+        GCMRegistrar.checkDevice(this);
+        String regId = GCMRegistrar.getRegistrationId(this);
+
+        Log.d(TAG, regId);
+
+        if (regId.equals(""))
+            GCMRegistrar.register(this, SENDER_ID);
+        else
+            new RegisterTask(context).execute(regId);
     }
 
     private void addPolygon(ParkingLot lot, float color) {
