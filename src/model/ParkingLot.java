@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class ParkingLot implements Parcelable {
 
-    private long lot_id;
+    private long lotId;
     private String name;
-    private long current_count;
+    private long currentCount;
     private long capacity;
     private ArrayList<LatLng> corners;
     private LatLng entrance;
@@ -21,19 +21,19 @@ public class ParkingLot implements Parcelable {
         permitGroups = new ArrayList<PermitGroup>();
     }
 
-    public ParkingLot(long lot_id, String name, long current_count, long capacity) {
-        this.lot_id = lot_id;
+    public ParkingLot(long lotId, String name, long currentCount, long capacity) {
+        this.lotId = lotId;
         this.name = name;
-        this.current_count = current_count;
+        this.currentCount = currentCount;
         this.capacity = capacity;
         this.entrance = null;
     }
 
     public ParkingLot(Parcel in) {
         this();
-        lot_id = in.readLong();
+        lotId = in.readLong();
         name = in.readString();
-        current_count = in.readLong();
+        currentCount = in.readLong();
         capacity = in.readLong();
         in.readTypedList(corners, LatLng.CREATOR);
         entrance = in.readParcelable(LatLng.class.getClassLoader());
@@ -41,7 +41,7 @@ public class ParkingLot implements Parcelable {
     }
 
     public long getLotId() {
-        return lot_id;
+        return lotId;
     }
 
     public String getLotName() {
@@ -49,7 +49,7 @@ public class ParkingLot implements Parcelable {
     }
 
     public long getCurrentCount() {
-        return current_count;
+        return currentCount;
     }
 
     public long getCapacity() {
@@ -102,9 +102,9 @@ public class ParkingLot implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeLong(lot_id);
+        out.writeLong(lotId);
         out.writeString(name);
-        out.writeLong(current_count);
+        out.writeLong(currentCount);
         out.writeLong(capacity);
         out.writeTypedList(corners);
         out.writeParcelable(entrance, flags);
