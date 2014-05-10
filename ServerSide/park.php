@@ -54,9 +54,23 @@ if(!$result) {
     die("Could not update the parking lot.");
 }
 
+$reg_ids = array();
+
+$sql = "SELECT DISTINCT RegistrationId FROM user";
+$result = mysql_query($sql, $connection);
+$count = mysql_numrows($result);
+
+for ($i = 0; $i < $count; $i++) {
+    $reg_ids[] = mysql_result($result, $i, "RegistrationId");
+}
+
+$message = array("parking_lot_id" => $lot_id);
+send_notification($reg_ids, $message);
+
 mysql_close($connection);
 
 print "Your parking request has been successfully registered.";
+
 
 function table_exists($tablename, $database = false) {
     if(!$database) {
@@ -72,6 +86,39 @@ function table_exists($tablename, $database = false) {
     ");
 
     return mysql_result($res, 0) == 1;
+}
+
+function send_notification($reg_ids, $message) {
+    $url = 'https://android.googleapis.com/gcm/send';
+
+    $fields = array(
+        'registration_ids' => $reg_ids,
+        'data' => $message,
+    );
+
+    $headers = array(
+        'Authorization: key=AIzaSyAC1YpmwknTqSmf6YDS9VlviRV3W8NsYOA',
+        'Content-Type: application/json'
+    );
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+
+    $result = curl_exec($ch);
+    if ($result === FALSE) {
+        die('Curl failed: ' . curl_error($ch));
+    }
+
+    curl_close($ch);
 }
 
 ?>
