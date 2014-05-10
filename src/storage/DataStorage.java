@@ -265,7 +265,53 @@ public class DataStorage extends SQLiteOpenHelper {
         corners_nineteen.add(new LatLng(39.256954, -76.710533));
         corners_nineteen.add(new LatLng(39.256933, -76.710586));
         corners_nineteen.add(new LatLng(39.257070, -76.710854));
-        
+
+        ArrayList<LatLng> corners_twenty = new ArrayList<LatLng>();
+        corners_twenty.add(new LatLng(39.257942, -76.713864));
+        corners_twenty.add(new LatLng(39.257822, -76.713456));
+        corners_twenty.add(new LatLng(39.257635, -76.713553));
+        corners_twenty.add(new LatLng(39.257722, -76.713928));
+
+        ArrayList<LatLng> corners_twentyone = new ArrayList<LatLng>();
+        corners_twentyone.add(new LatLng(39.252368, -76.713510));
+        corners_twentyone.add(new LatLng(39.251894, -76.711911));
+        corners_twentyone.add(new LatLng(39.251583, -76.712051));
+        corners_twentyone.add(new LatLng(39.252048, -76.713671));
+
+        ArrayList<LatLng> corners_twentytwo = new ArrayList<LatLng>();
+        corners_twentytwo.add(new LatLng(39.254740, -76.715232));
+        corners_twentytwo.add(new LatLng(39.254777, -76.714980));
+        corners_twentytwo.add(new LatLng(39.254711, -76.714647));
+        corners_twentytwo.add(new LatLng(39.254175, -76.714942));
+        corners_twentytwo.add(new LatLng(39.254354, -76.715409));
+
+        ArrayList<LatLng> corners_twentythree = new ArrayList<LatLng>();
+        corners_twentythree.add(new LatLng(39.257386, -76.715039));
+        corners_twentythree.add(new LatLng(39.257178, -76.714288));
+        corners_twentythree.add(new LatLng(39.255902, -76.714913));
+        corners_twentythree.add(new LatLng(39.256214, -76.716141));
+        corners_twentythree.add(new LatLng(39.256513, -76.715991));
+        corners_twentythree.add(new LatLng(39.256484, -76.715803));
+        corners_twentythree.add(new LatLng(39.256812, -76.715674));
+        corners_twentythree.add(new LatLng(39.256816, -76.715594));
+        corners_twentythree.add(new LatLng(39.256941, -76.715556));
+        corners_twentythree.add(new LatLng(39.257128, -76.715363));
+        corners_twentythree.add(new LatLng(39.257120, -76.715277));
+        corners_twentythree.add(new LatLng(39.257427, -76.715127));
+
+        ArrayList<LatLng> corners_twentyfour = new ArrayList<LatLng>();
+        corners_twentyfour.add(new LatLng(39.258186, -76.718608));
+        corners_twentyfour.add(new LatLng(39.257090, -76.716676));
+        corners_twentyfour.add(new LatLng(39.256757, -76.716955));
+        corners_twentyfour.add(new LatLng(39.257572, -76.719165));
+
+        ArrayList<LatLng> corners_twentyfive = new ArrayList<LatLng>();
+        corners_twentyfive.add(new LatLng(39.261410, -76.714359));
+        corners_twentyfive.add(new LatLng(39.260745, -76.713050));
+        corners_twentyfive.add(new LatLng(39.259981, -76.713737));
+        corners_twentyfive.add(new LatLng(39.260762, -76.715046));
+
+
         ParkingLot parkingLot = new ParkingLot(1, "Commons", 0, 3);
         parkingLot.setCorners(corners_one);
         parkingLots.add(parkingLot);
@@ -340,6 +386,30 @@ public class DataStorage extends SQLiteOpenHelper {
 
         parkingLot = new ParkingLot(19, "Lot 7", 0, 4);
         parkingLot.setCorners(corners_nineteen);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(20, "Lot 10", 0, 4);
+        parkingLot.setCorners(corners_twenty);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(21, "Admin Drive Garage", 0, 4);
+        parkingLot.setCorners(corners_twentyone);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(22, "Lot 9", 0, 4);
+        parkingLot.setCorners(corners_twentytwo);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(23, "Lot 8", 0, 4);
+        parkingLot.setCorners(corners_twentythree);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(24, "Lot 22", 0, 4);
+        parkingLot.setCorners(corners_twentyfour);
+        parkingLots.add(parkingLot);
+
+        parkingLot = new ParkingLot(25, "Lot 20", 0, 4);
+        parkingLot.setCorners(corners_twentyfive);
         parkingLots.add(parkingLot);
 
         for (ParkingLot lot : parkingLots) {
