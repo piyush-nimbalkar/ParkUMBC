@@ -15,6 +15,11 @@ public class ParkingLot implements Parcelable {
     private ArrayList<LatLng> corners;
     private ArrayList<PermitGroup> permitGroups;
 
+    public ParkingLot() {
+        corners = new ArrayList<LatLng>();
+        permitGroups = new ArrayList<PermitGroup>();
+    }
+
     public ParkingLot(long lot_id, String name, long current_count, long capacity) {
         this.lot_id = lot_id;
         this.name = name;
@@ -23,10 +28,13 @@ public class ParkingLot implements Parcelable {
     }
 
     public ParkingLot(Parcel in) {
+        this();
         lot_id = in.readLong();
         name = in.readString();
         current_count = in.readLong();
         capacity = in.readLong();
+        in.readTypedList(corners, LatLng.CREATOR);
+        in.readTypedList(permitGroups, PermitGroup.CREATOR);
     }
 
     public long getLotId() {
@@ -86,16 +94,18 @@ public class ParkingLot implements Parcelable {
         out.writeString(name);
         out.writeLong(current_count);
         out.writeLong(capacity);
+        out.writeTypedList(corners);
+        out.writeTypedList(permitGroups);
     }
 
-    public static final Parcelable.Creator<PermitGroup> CREATOR = new Parcelable.Creator<PermitGroup>() {
+    public static final Parcelable.Creator<ParkingLot> CREATOR = new Parcelable.Creator<ParkingLot>() {
 
-        public PermitGroup createFromParcel(Parcel in) {
-            return new PermitGroup(in);
+        public ParkingLot createFromParcel(Parcel in) {
+            return new ParkingLot(in);
         }
 
-        public PermitGroup[] newArray(int size) {
-            return new PermitGroup[size];
+        public ParkingLot[] newArray(int size) {
+            return new ParkingLot[size];
         }
 
     };

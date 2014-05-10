@@ -77,8 +77,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         TextView parkButton = (TextView) findViewById(R.id.park_button);
         TextView permitButton = (TextView) findViewById(R.id.permit_button);
+        TextView notifyButton = (TextView) findViewById(R.id.notify_button);
         parkButton.setOnClickListener(this);
         permitButton.setOnClickListener(this);
+        notifyButton.setOnClickListener(this);
     }
 
     private void addPolygon(ParkingLot lot, float color) {
@@ -195,14 +197,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.park_button:
                 reportParking();
                 break;
             case R.id.permit_button:
-                Intent intent = new Intent(context, PermitGroupActivity.class);
+                intent = new Intent(context, PermitGroupActivity.class);
                 intent.putParcelableArrayListExtra(PERMIT_GROUPS, repository.getPermitGroups());
                 startActivityForResult(intent, REQUEST_CODE);
+                break;
+            case R.id.notify_button:
+                intent = new Intent(context, NotifyListActivity.class);
+                intent.putParcelableArrayListExtra(PARKING_LOTS, repository.getParkingLots());
+                startActivity(intent);
                 break;
             default:
                 break;
