@@ -90,12 +90,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         GCMRegistrar.checkDevice(this);
         String regId = GCMRegistrar.getRegistrationId(this);
 
-        Log.d(TAG, regId);
-
-        if (regId.equals(""))
+        if (regId.equals("")) {
             GCMRegistrar.register(this, SENDER_ID);
-        else
-            new RegisterTask(context).execute(regId);
+        } else {
+            if (GCMRegistrar.isRegisteredOnServer(this))
+                Log.d(TAG, "Already registered on the server.");
+            else
+                new RegisterTask(context).execute(regId);
+        }
     }
 
     private void addPolygon(ParkingLot lot, float color) {
