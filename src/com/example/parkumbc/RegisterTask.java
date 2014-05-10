@@ -3,7 +3,6 @@ package com.example.parkumbc;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import storage.ServerResponse;
 
 public class RegisterTask extends AsyncTask<String, Integer, ServerResponse> {
 

@@ -10,15 +10,14 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import storage.ServerResponse;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.example.parkumbc.Constant.REGISTER_URL;
-import static com.example.parkumbc.Constant.REGISTRATION_ID;
+import static com.example.parkumbc.Constant.*;
 
 public class Server {
 
@@ -44,10 +43,38 @@ public class Server {
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
             String responseString = reader.readLine();
             serverResponse = new ServerResponse(httpResponse.getStatusLine().getStatusCode(), responseString);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         GCMRegistrar.setRegisteredOnServer(context, true);
+        return serverResponse;
+    }
+
+    static ServerResponse reportParking(long parking_lot_id, boolean is_parked) {
+        ServerResponse serverResponse = null;
+        String url = (is_parked ? PARK_URL : CHECKOUT_URL);
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(url);
+
+        List<NameValuePair> value = new LinkedList<NameValuePair>();
+        value.add(new BasicNameValuePair(PARKING_LOT_ID, String.valueOf(parking_lot_id)));
+
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(value));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+            String responseString = reader.readLine();
+            serverResponse = new ServerResponse(httpResponse.getStatusLine().getStatusCode(), responseString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return serverResponse;
     }
 

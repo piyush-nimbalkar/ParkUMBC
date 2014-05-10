@@ -1,4 +1,4 @@
-package storage;
+package com.example.parkumbc;
 
 public class ServerResponse {
 

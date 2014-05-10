@@ -1,14 +1,13 @@
 package repository;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.util.Log;
+import com.example.parkumbc.UpdateParkingTask;
 import model.Entry;
 import model.ParkingLot;
 import model.PermitGroup;
 import storage.DataStorage;
-import storage.ServerStorage;
 import android.content.Context;
 
 public class Repository {
@@ -25,7 +24,7 @@ public class Repository {
     public boolean createEntry(double latitude, double longitude, long parking_lot_id, boolean is_parked) {
         Entry entry = new Entry(latitude, longitude, parking_lot_id, is_parked);
         dataStorage.store(entry);
-        new ServerStorage().store(parking_lot_id, is_parked);
+        new UpdateParkingTask(parking_lot_id, is_parked).execute();
         return true;
     }
 

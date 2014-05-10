@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import com.google.android.gcm.GCMBaseIntentService;
-import storage.ServerResponse;
 
 import java.util.Set;
 
