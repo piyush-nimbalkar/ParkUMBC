@@ -24,41 +24,27 @@ public class Server {
     static final String TAG = "SERVER";
 
     static ServerResponse register(final Context context, String registrationId) {
-        ServerResponse serverResponse = null;
-
-        HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost(REGISTER_URL);
-
         List<NameValuePair> value = new LinkedList<NameValuePair>();
         value.add(new BasicNameValuePair(REGISTRATION_ID, registrationId));
-
-        try {
-            post.setEntity(new UrlEncodedFormEntity(value));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            HttpResponse httpResponse = client.execute(post);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-            String responseString = reader.readLine();
-            serverResponse = new ServerResponse(httpResponse.getStatusLine().getStatusCode(), responseString);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         GCMRegistrar.setRegisteredOnServer(context, true);
-        return serverResponse;
+        return postRequest(REGISTER_URL, value);
     }
 
     static ServerResponse reportParking(long parking_lot_id, boolean is_parked) {
-        ServerResponse serverResponse = null;
-        String url = (is_parked ? PARK_URL : CHECKOUT_URL);
-
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(url);
-
         List<NameValuePair> value = new LinkedList<NameValuePair>();
         value.add(new BasicNameValuePair(PARKING_LOT_ID, String.valueOf(parking_lot_id)));
+        return postRequest((is_parked ? PARK_URL : CHECKOUT_URL), value);
+    }
+
+    static void unregister(final Context context, final String registrationId) {
+        Log.i(TAG, "Unregistering the device");
+        GCMRegistrar.setRegisteredOnServer(context, false);
+    }
+
+    private static ServerResponse postRequest(String url, List<NameValuePair> value) {
+        ServerResponse serverResponse = null;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(url);
 
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(value));
@@ -76,11 +62,6 @@ public class Server {
         }
 
         return serverResponse;
-    }
-
-    static void unregister(final Context context, final String registrationId) {
-        Log.i(TAG, "Unregistering the device");
-        GCMRegistrar.setRegisteredOnServer(context, false);
     }
 
 }
