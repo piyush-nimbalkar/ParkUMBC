@@ -53,7 +53,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Set<String> selectedLots = preferences.getStringSet(PARKING_LOTS, null);
-        if (selectedLots != null) {
+        if (selectedLots != null && selectedLots.contains(lotName)) {
             int icon = R.drawable.ic_launcher;
             long when = System.currentTimeMillis();
 
