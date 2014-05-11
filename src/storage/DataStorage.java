@@ -127,11 +127,16 @@ public class DataStorage extends SQLiteOpenHelper {
         db.execSQL(CREATE_CORNER_TABLE);
         db.execSQL(CREATE_PERMIT_GROUP_TABLE);
         db.execSQL(CREATE_PARKING_PERMIT_TABLE);
+        createPermitGroups(db);
+        createParkingPermits(db);
     }
 
-    public void createParkingLots() {
-        SQLiteDatabase db = getReadableDatabase();
-        List<ParkingLot> parkingLots = Seeds.getParkingLotData();
+    public void createParkingLots(ArrayList<ParkingLot> lots) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_PARKING_LOT);
+        db.execSQL("DELETE FROM " + TABLE_CORNER);
+
+        List<ParkingLot> parkingLots = Seeds.getParkingLotData(lots);
 
         for (ParkingLot lot : parkingLots) {
             SQLiteStatement statement = db.compileStatement(INSERT_PARKING_LOT);
@@ -159,8 +164,7 @@ public class DataStorage extends SQLiteOpenHelper {
         }
     }
 
-    public void createPermitGroups() {
-        SQLiteDatabase db = getReadableDatabase();
+    public void createPermitGroups(SQLiteDatabase db) {
         List<PermitGroup> permits = Seeds.getPermitGroupData();
 
         for (PermitGroup permit : permits) {
@@ -174,8 +178,7 @@ public class DataStorage extends SQLiteOpenHelper {
         Log.d(TAG, "Permit groups created.");
     }
 
-    public void createParkingPermits() {
-        SQLiteDatabase db = getReadableDatabase();
+    public void createParkingPermits(SQLiteDatabase db) {
         long[][] parking_permit_relation = Seeds.getParkingPermitData();
 
         for (int i = 0; i < parking_permit_relation.length; i++) {
@@ -215,7 +218,7 @@ public class DataStorage extends SQLiteOpenHelper {
 
                     ParkingLot lot = new ParkingLot(lotId, name, count, capacity);
                     lot.setCorners(getCorners(db, lotId));
-                    lot.setEntrance(entrance_lat, entrance_lng);
+                    lot.setEntrance(new LatLng(entrance_lat, entrance_lng));
                     lot.setPermitGroups(getPermitGroups(db, lotId));
 
                     lots.add(lot);

@@ -33,7 +33,7 @@ import java.util.TreeMap;
 
 import static com.example.parkumbc.Constant.*;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
+public class MainActivity extends FragmentActivity implements View.OnClickListener, DataReceiver {
 
     private static final int THRESHOLD = 1;
     private static final int REQUEST_CODE = 1;
@@ -66,13 +66,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(39.255, -76.710), 15));
 
-        new SyncParkingLotsTask().execute();
-        repository = new Repository(getApplicationContext());
-        parkingLots = repository.getParkingLots();
-        Log.d(TAG, "No. of parking lots: " + parkingLots.size());
-
-        for (ParkingLot lot : parkingLots)
-            addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
+        SyncParkingLotsTask task = new SyncParkingLotsTask();
+        task.delegate = (DataReceiver) context;
+        task.execute();
 
         ImageButton notifyButton = (ImageButton) findViewById(R.id.notify_button);
         ImageButton parkButton = (ImageButton) findViewById(R.id.park_button);
@@ -105,8 +101,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (permitGroup != null && !lot.getPermitGroups().contains(permitGroup))
             return;
         PolygonOptions options = new PolygonOptions();
-        for (LatLng l : lot.getCorners())
-            options.add(new LatLng(l.latitude, l.longitude));
+        Log.d(TAG, lot.getLotName() + " " + String.valueOf(lot.getCorners().size()));
+        for (LatLng corner : lot.getCorners()) {
+            Log.d(TAG, String.valueOf(corner.latitude) + ", " + String.valueOf(corner.longitude));
+            options.add(corner);
+        }
         map.addPolygon(options.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
         addMarker(lot, color);
     }
@@ -264,6 +263,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onPause();
         if (locationTracker != null)
             locationTracker.removeLocationUpdates();
+    }
+
+    @Override
+    public void receive(ArrayList<ParkingLot> lots) {
+        repository = new Repository(context);
+        repository.storeParkingLots(lots);
+        parkingLots = repository.getParkingLots();
+        for (ParkingLot lot : parkingLots)
+            addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
     }
 
 }

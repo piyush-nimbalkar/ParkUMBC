@@ -72,8 +72,7 @@ public class ParkingLot implements Parcelable {
         this.corners = corners;
     }
 
-    public void setEntrance(double lat, double lng) {
-        LatLng entrance = new LatLng(lat, lng);
+    public void setEntrance(LatLng entrance) {
         this.entrance = entrance;
     }
 
