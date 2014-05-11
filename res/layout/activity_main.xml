@@ -20,7 +20,9 @@
             android:id="@+id/notify_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="20dp"
             android:gravity="center"
+            android:src="@drawable/ic_notification"
             android:layout_weight="1"
             android:background="#222222"/>
 
@@ -38,7 +40,9 @@
             android:id="@+id/permit_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="20dp"
             android:gravity="center"
+            android:src="@drawable/ic_permit"
             android:layout_weight="1"
             android:background="#222222"/>
 
