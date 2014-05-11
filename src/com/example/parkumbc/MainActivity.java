@@ -35,10 +35,9 @@ import static com.example.parkumbc.Constant.*;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener, DataReceiver {
 
+    private static final String TAG = "MAIN_ACTIVITY";
     private static final int THRESHOLD = 1;
     private static final int REQUEST_CODE = 1;
-    private static final String TAG = "MAIN_ACTIVITY";
-    private static final double PI = 3.141592653589793;
     private static final double RADIUS = 6378.16;
     private AlertDialog selectLotDialog;
 
@@ -101,11 +100,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (permitGroup != null && !lot.getPermitGroups().contains(permitGroup))
             return;
         PolygonOptions options = new PolygonOptions();
-        Log.d(TAG, lot.getLotName() + " " + String.valueOf(lot.getCorners().size()));
-        for (LatLng corner : lot.getCorners()) {
-            Log.d(TAG, String.valueOf(corner.latitude) + ", " + String.valueOf(corner.longitude));
+        for (LatLng corner : lot.getCorners())
             options.add(corner);
-        }
         map.addPolygon(options.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
         addMarker(lot, color);
     }
