@@ -14,6 +14,7 @@ public final class Constant {
     static final String PARKING_LOTS = "ParkingLots";
     static final String PARKING_LOT_ID = "parking_lot_id";
     static final String PARKING_LOT_NAME = "parking_lot_name";
+    static final String PARKED_LOT_ID = "parked_lot_id";
 
     static final int SELECTION_COLOR = 0xFFFFE386;
 

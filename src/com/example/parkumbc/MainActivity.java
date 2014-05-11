@@ -94,87 +94,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    private double getDistance(ParkingLot parkingLot, LatLng p) {
-        LatLng entrance = parkingLot.getEntrance();
-        double dlong = Math.toRadians(p.longitude - entrance.longitude);
-        double dlat = Math.toRadians(p.latitude - entrance.latitude);
-        double a = (Math.sin(dlat / 2) * Math.sin(dlat / 2)) +
-                Math.cos(Math.toRadians(entrance.latitude)) * Math.cos(Math.toRadians(p.latitude)) *
-                        (Math.sin(dlong / 2) * Math.sin(dlong / 2));
-        double angle = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return angle * RADIUS;
-    }
-
-    private void findClosest(LatLng p) {
-        TreeMap<Double, ParkingLot> closest = new TreeMap<Double, ParkingLot>();
-        closestLots = new ArrayList<ParkingLot>();
-
-        Log.d(TAG, "POINT:" + p.latitude + " " + p.longitude);
-        Log.d(TAG, "PARKING LOTS: " + parkingLots.size());
-
-        for (ParkingLot parkingLot : parkingLots)
-            closest.put(getDistance(parkingLot, p), parkingLot);
-
-        for (Object key : closest.keySet().toArray()) {
-            ParkingLot value = closest.get(key);
-            Log.d(TAG, key.toString());
-            if (closestLots.size() < 3)
-                closestLots.add(value);
-        }
-        showDialog();
-    }
-
-    private void showDialog() {
-        CharSequence[] closestLotNames = new CharSequence[closestLots.size()];
-        for (int i = 0; i < closestLots.size(); i++)
-            closestLotNames[i] = closestLots.get(i).getLotName();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Select Parking Lot");
-        builder.setSingleChoiceItems(closestLotNames, -1, (DialogInterface.OnClickListener) context);
-
-        selectLotDialog = builder.create();
-        selectLotDialog.show();
-    }
-
-
-    private void changeParkingStatus(long parkingLotId) {
-        int parkingLotIndex = 0;
-
-        for (int i = 0; i < parkingLots.size(); i++) {
-            if (parkingLots.get(i).getLotId() == parkingLotId) {
-                parkingLotIndex = i;
-                break;
-            }
-        }
-
-        TextView parkButtonText = (TextView) findViewById(R.id.park_button_text);
-
-        if (parkButtonText.getText() == getString(R.string.park)) {
-            parkButtonText.setText(getString(R.string.checkout));
-            repository.updateParkingLot(parkingLotId, true);
-            parkingLots.get(parkingLotIndex).incrementCount();
-            Toast.makeText(context, getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
-        } else {
-            parkButtonText.setText(getString(R.string.park));
-            repository.updateParkingLot(parkingLotId, false);
-            parkingLots.get(parkingLotIndex).decrementCount();
-            Toast.makeText(context, R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
-        }
-
-        plotParkingLots();
-    }
-
-    private void reportParkingDialog() {
-        locationTracker = new LocationTracker(context);
-        if (locationTracker.canGetLocation()) {
-
-            Log.d(TAG, "Location: " + locationTracker.getLatitude() + ", " + locationTracker.getLongitude());
-            findClosest(new LatLng(locationTracker.getLatitude(), locationTracker.getLongitude()));
-        } else {
-            locationTracker.showEnableGpsDialog();
-        }
-    }
 
     @Override
     public void onClick(View view) {
@@ -182,7 +101,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch (view.getId()) {
             case R.id.park_button:
             case R.id.park_button_text:
-                reportParkingDialog();
+                onParkButtonClick();
                 break;
             case R.id.permit_button:
             case R.id.permit_button_text:
@@ -207,6 +126,79 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             default:
                 break;
         }
+    }
+
+    private void onParkButtonClick() {
+        locationTracker = new LocationTracker(context);
+        Log.d(TAG, "Location: " + locationTracker.getLatitude() + ", " + locationTracker.getLongitude());
+
+        if (locationTracker.canGetLocation()) {
+            TextView parkButtonText = (TextView) findViewById(R.id.park_button_text);
+
+            if (parkButtonText.getText() == getString(R.string.park)) {
+                findClosest(new LatLng(locationTracker.getLatitude(), locationTracker.getLongitude()));
+            } else {
+                parkButtonText.setText(getString(R.string.park));
+                Toast.makeText(context, R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                long parkedLotId = preferences.getLong(PARKED_LOT_ID, -1);
+                int parkingLotIndex = -1;
+                for (int i = 0; i < parkingLots.size(); i++) {
+                    if (parkingLots.get(i).getLotId() == parkedLotId) {
+                        parkingLotIndex = i;
+                        break;
+                    }
+                }
+                repository.updateParkingLot(parkedLotId, false);
+                parkingLots.get(parkingLotIndex).decrementCount();
+                plotParkingLots();
+            }
+        } else {
+            locationTracker.showEnableGpsDialog();
+        }
+    }
+
+    private void showDialog() {
+        CharSequence[] closestLotNames = new CharSequence[closestLots.size()];
+        for (int i = 0; i < closestLots.size(); i++)
+            closestLotNames[i] = closestLots.get(i).getLotName();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Select Parking Lot");
+        builder.setSingleChoiceItems(closestLotNames, -1, (DialogInterface.OnClickListener) context);
+
+        selectLotDialog = builder.create();
+        selectLotDialog.show();
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        changeParkingStatus(closestLots.get(which).getLotId());
+        selectLotDialog.dismiss();
+    }
+
+    private void changeParkingStatus(long parkingLotId) {
+        int parkingLotIndex = -1;
+        for (int i = 0; i < parkingLots.size(); i++) {
+            if (parkingLots.get(i).getLotId() == parkingLotId) {
+                parkingLotIndex = i;
+                break;
+            }
+        }
+
+        TextView parkButtonText = (TextView) findViewById(R.id.park_button_text);
+        parkButtonText.setText(getString(R.string.checkout));
+        Toast.makeText(context, getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(PARKED_LOT_ID, parkingLotId);
+        editor.commit();
+
+        repository.updateParkingLot(parkingLotId, true);
+        parkingLots.get(parkingLotIndex).incrementCount();
+        plotParkingLots();
     }
 
     @Override
@@ -261,9 +253,34 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .icon(BitmapDescriptorFactory.fromResource(marker)));
     }
 
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-        changeParkingStatus(closestLots.get(which).getLotId());
-        selectLotDialog.dismiss();
+    private double getDistance(ParkingLot parkingLot, LatLng p) {
+        LatLng entrance = parkingLot.getEntrance();
+        double dlong = Math.toRadians(p.longitude - entrance.longitude);
+        double dlat = Math.toRadians(p.latitude - entrance.latitude);
+        double a = (Math.sin(dlat / 2) * Math.sin(dlat / 2)) +
+                Math.cos(Math.toRadians(entrance.latitude)) * Math.cos(Math.toRadians(p.latitude)) *
+                        (Math.sin(dlong / 2) * Math.sin(dlong / 2));
+        double angle = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return angle * RADIUS;
     }
+
+    private void findClosest(LatLng p) {
+        TreeMap<Double, ParkingLot> closest = new TreeMap<Double, ParkingLot>();
+        closestLots = new ArrayList<ParkingLot>();
+
+        Log.d(TAG, "POINT:" + p.latitude + " " + p.longitude);
+        Log.d(TAG, "PARKING LOTS: " + parkingLots.size());
+
+        for (ParkingLot parkingLot : parkingLots)
+            closest.put(getDistance(parkingLot, p), parkingLot);
+
+        for (Object key : closest.keySet().toArray()) {
+            ParkingLot value = closest.get(key);
+            Log.d(TAG, key.toString());
+            if (closestLots.size() < 3)
+                closestLots.add(value);
+        }
+        showDialog();
+    }
+
 }
