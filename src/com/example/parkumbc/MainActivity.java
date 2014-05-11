@@ -117,16 +117,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .icon(BitmapDescriptorFactory.defaultMarker(color)));
     }
 
-    public static double radians(double x) {
-        return x * PI / 180;
-    }
-
     private double getDistance(ParkingLot parkingLot, LatLng p) {
         LatLng entrance = parkingLot.getEntrance();
-        double dlong = radians(p.longitude - entrance.longitude);
-        double dlat = radians(p.latitude - entrance.latitude);
+        double dlong = Math.toRadians(p.longitude - entrance.longitude);
+        double dlat = Math.toRadians(p.latitude - entrance.latitude);
         double a = (Math.sin(dlat / 2) * Math.sin(dlat / 2)) +
-                Math.cos(radians(entrance.latitude)) * Math.cos(radians(p.latitude)) *
+                Math.cos(Math.toRadians(entrance.latitude)) * Math.cos(Math.toRadians(p.latitude)) *
                         (Math.sin(dlong / 2) * Math.sin(dlong / 2));
         double angle = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return angle * RADIUS;
