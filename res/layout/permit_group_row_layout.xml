@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
+    android:layout_marginTop="15dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewPermitAbbrev"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:textSize="25sp"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:layout_marginLeft="15dp" />
 
     <TextView
         android:id="@+id/textViewPermitName"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:textSize="20sp"
-        android:paddingTop="5dp"
+        android:singleLine="true"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp" />
+        android:layout_marginRight="15dp" />
 
 </LinearLayout>
