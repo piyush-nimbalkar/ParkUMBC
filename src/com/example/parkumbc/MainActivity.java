@@ -247,18 +247,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         map.addPolygon(options.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
 
         if (lot.isFull())
-            addMarker(lot, BitmapDescriptorFactory.HUE_RED);
+            addMarker(lot, R.drawable.ic_marker_red);
         else if (lot.isAlmostFull())
-            addMarker(lot, BitmapDescriptorFactory.HUE_ORANGE);
+            addMarker(lot, R.drawable.ic_marker_orange);
         else
-            addMarker(lot, BitmapDescriptorFactory.HUE_GREEN);
+            addMarker(lot, R.drawable.ic_marker_green);
     }
 
-    private void addMarker(ParkingLot lot, float color) {
+    private void addMarker(ParkingLot lot, int marker) {
         map.addMarker(new MarkerOptions()
                 .position(lot.getMarkerPosition())
                 .title(lot.getLotName())
-                .icon(BitmapDescriptorFactory.defaultMarker(color)));
+                .icon(BitmapDescriptorFactory.fromResource(marker)));
     }
 
     @Override
