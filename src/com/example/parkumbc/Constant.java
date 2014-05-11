@@ -5,6 +5,7 @@ public final class Constant {
     static final String SENDER_ID = "1025098394360";
     static final String REGISTRATION_ID = "registration_id";
     static final String REGISTER_URL = "http://mpss.csce.uark.edu/~devan/register_user.php";
+    static final String PARKING_LOTS_URL = "http://mpss.csce.uark.edu/~devan/parking_lots.php";
     static final String PARK_URL = "http://mpss.csce.uark.edu/~devan/park.php";
     static final String CHECKOUT_URL = "http://mpss.csce.uark.edu/~devan/checkout.php";
 

@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -36,6 +37,10 @@ public class Server {
         return postRequest((is_parked ? PARK_URL : CHECKOUT_URL), value);
     }
 
+    static ServerResponse syncParkingLots() {
+        return getRequest(PARKING_LOTS_URL);
+    }
+
     static void unregister(final Context context, final String registrationId) {
         Log.i(TAG, "Unregistering the device");
         GCMRegistrar.setRegisteredOnServer(context, false);
@@ -54,6 +59,23 @@ public class Server {
 
         try {
             HttpResponse httpResponse = httpClient.execute(httpPost);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+            String responseString = reader.readLine();
+            serverResponse = new ServerResponse(httpResponse.getStatusLine().getStatusCode(), responseString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return serverResponse;
+    }
+
+    private static ServerResponse getRequest(String url) {
+        ServerResponse serverResponse = null;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(url);
+
+        try {
+            HttpResponse httpResponse = httpClient.execute(httpGet);
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
             String responseString = reader.readLine();
             serverResponse = new ServerResponse(httpResponse.getStatusLine().getStatusCode(), responseString);

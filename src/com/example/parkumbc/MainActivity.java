@@ -98,6 +98,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             else
                 new RegisterTask(context).execute(regId);
         }
+
+        new SyncParkingLotsTask().execute();
     }
 
     private void addPolygon(ParkingLot lot, float color) {
