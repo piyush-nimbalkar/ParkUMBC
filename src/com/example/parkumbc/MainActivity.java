@@ -36,7 +36,6 @@ import static com.example.parkumbc.Constant.*;
 public class MainActivity extends FragmentActivity implements View.OnClickListener, DataReceiver {
 
     private static final String TAG = "MAIN_ACTIVITY";
-    private static final int THRESHOLD = 1;
     private static final int REQUEST_CODE = 1;
     private static final double RADIUS = 6378.16;
     private AlertDialog selectLotDialog;
@@ -49,8 +48,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private Repository repository;
     private List<ParkingLot> parkingLots;
     private PermitGroup permitGroup;
-
-    private int current_count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,23 +91,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             else
                 new RegisterTask(context).execute(regId);
         }
-    }
-
-    private void addPolygon(ParkingLot lot, float color) {
-        if (permitGroup != null && !lot.getPermitGroups().contains(permitGroup))
-            return;
-        PolygonOptions options = new PolygonOptions();
-        for (LatLng corner : lot.getCorners())
-            options.add(corner);
-        map.addPolygon(options.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
-        addMarker(lot, color);
-    }
-
-    private void addMarker(ParkingLot lot, float color) {
-        map.addMarker(new MarkerOptions()
-                .position(lot.getMarkerPosition())
-                .title(lot.getLotName())
-                .icon(BitmapDescriptorFactory.defaultMarker(color)));
     }
 
     private double getDistance(ParkingLot parkingLot, LatLng p) {
@@ -175,34 +155,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             TextView parkButtonText = (TextView) findViewById(R.id.park_button_text);
 
             if (parkButtonText.getText() == getString(R.string.park)) {
-                repository.updateParkingLot(parkingLots.get(0).getLotId(), true);
                 parkButtonText.setText(getString(R.string.checkout));
+                repository.updateParkingLot(parkingLots.get(0).getLotId(), true);
+                parkingLots.get(0).incrementCount();
 
                 LatLng current_location = new LatLng(latitude, longitude);
                 findClosest(current_location);
                 Toast.makeText(context, getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
-                current_count += 1;
             } else {
-                repository.updateParkingLot(parkingLots.get(0).getLotId(), false);
                 parkButtonText.setText(getString(R.string.park));
+                repository.updateParkingLot(parkingLots.get(0).getLotId(), false);
+                parkingLots.get(0).decrementCount();
                 Toast.makeText(context, R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
-                current_count -= 1;
             }
 
-            map.clear();
-            if (current_count < THRESHOLD) {
-                for (ParkingLot lot : parkingLots)
-                    addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
-            } else {
-                for (ParkingLot lot : parkingLots) {
-                    if (lot.getLotId() == parkingLots.get(0).getLotId())
-                        addPolygon(lot, BitmapDescriptorFactory.HUE_RED);
-                    else
-                        addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
-                }
-            }
+            plotParkingLots();
         } else {
-            Log.d(TAG, "PROMPT");
             locationTracker.showEnableGpsDialog();
         }
     }
@@ -244,9 +212,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK)
             permitGroup = data.getParcelableExtra(PERMIT_GROUP);
-        map.clear();
-        for (ParkingLot lot : parkingLots)
-            addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
+        plotParkingLots();
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -262,8 +228,36 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         repository = new Repository(context);
         repository.storeParkingLots(lots);
         parkingLots = repository.getParkingLots();
+        plotParkingLots();
+    }
+
+    private void plotParkingLots() {
+        map.clear();
         for (ParkingLot lot : parkingLots)
-            addPolygon(lot, BitmapDescriptorFactory.HUE_GREEN);
+            addBoundary(lot);
+    }
+
+    private void addBoundary(ParkingLot lot) {
+        if (permitGroup != null && !lot.getPermitGroups().contains(permitGroup))
+            return;
+        PolygonOptions options = new PolygonOptions();
+        for (LatLng corner : lot.getCorners())
+            options.add(corner);
+        map.addPolygon(options.fillColor(0x500011FF).strokeColor(0x50444444).strokeWidth(0));
+
+        if (lot.isFull())
+            addMarker(lot, BitmapDescriptorFactory.HUE_RED);
+        else if (lot.isAlmostFull())
+            addMarker(lot, BitmapDescriptorFactory.HUE_ORANGE);
+        else
+            addMarker(lot, BitmapDescriptorFactory.HUE_GREEN);
+    }
+
+    private void addMarker(ParkingLot lot, float color) {
+        map.addMarker(new MarkerOptions()
+                .position(lot.getMarkerPosition())
+                .title(lot.getLotName())
+                .icon(BitmapDescriptorFactory.defaultMarker(color)));
     }
 
 }

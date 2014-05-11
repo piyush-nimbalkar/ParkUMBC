@@ -122,4 +122,21 @@ public class ParkingLot implements Parcelable {
 
     };
 
+    public void incrementCount() {
+        if (currentCount < capacity)
+            currentCount++;
+    }
+
+    public void decrementCount() {
+        if (currentCount > 0)
+            currentCount--;
+    }
+
+    public boolean isFull() {
+        return currentCount == capacity;
+    }
+
+    public boolean isAlmostFull() {
+        return ((double) currentCount / (double) capacity) > 0.7 ;
+    }
 }
