@@ -33,13 +33,13 @@ import java.util.TreeMap;
 
 import static com.example.parkumbc.Constant.*;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener, DataReceiver {
+public class MainActivity extends FragmentActivity implements View.OnClickListener, DataReceiver, DialogInterface.OnClickListener {
 
     private static final String TAG = "MAIN_ACTIVITY";
     private static final int REQUEST_CODE = 1;
-    private static final double RADIUS = 6378.16;
-    private AlertDialog selectLotDialog;
+    private static final double RADIUS = 6371;
 
+    private AlertDialog selectLotDialog;
     private Context context;
 
     private GoogleMap map;
@@ -47,6 +47,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private Repository repository;
     private List<ParkingLot> parkingLots;
+    private ArrayList<ParkingLot> closestLots;
     private PermitGroup permitGroup;
 
     @Override
@@ -106,70 +107,70 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void findClosest(LatLng p) {
         TreeMap<Double, ParkingLot> closest = new TreeMap<Double, ParkingLot>();
-        ArrayList<String> temp = new ArrayList<String>();
+        closestLots = new ArrayList<ParkingLot>();
 
         Log.d(TAG, "POINT:" + p.latitude + " " + p.longitude);
         Log.d(TAG, "PARKING LOTS: " + parkingLots.size());
 
-        for (ParkingLot parkingLot : parkingLots) {
+        for (ParkingLot parkingLot : parkingLots)
             closest.put(getDistance(parkingLot, p), parkingLot);
-        }
+
         for (Object key : closest.keySet().toArray()) {
             ParkingLot value = closest.get(key);
-            if (temp.size() < 3)
-                temp.add(value.getLotName());
+            Log.d(TAG, key.toString());
+            if (closestLots.size() < 3)
+                closestLots.add(value);
         }
-        showDialog(temp);
+        showDialog();
     }
 
-    private void showDialog(ArrayList<String> contents) {
-        CharSequence[] closestLots = {contents.get(0), contents.get(1), contents.get(2)};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select Parking Lot");
-        builder.setSingleChoiceItems(closestLots, -1, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                switch (item) {
-                    case 0:
-                        Toast.makeText(context, "first", Toast.LENGTH_LONG).show();
-                        break;
-                    case 1:
-                        Toast.makeText(context, "second", Toast.LENGTH_LONG).show();
-                        break;
-                    case 2:
-                        Toast.makeText(context, "third", Toast.LENGTH_LONG).show();
-                        break;
+    private void showDialog() {
+        CharSequence[] closestLotNames = new CharSequence[closestLots.size()];
+        for (int i = 0; i < closestLots.size(); i++)
+            closestLotNames[i] = closestLots.get(i).getLotName();
 
-                }
-                selectLotDialog.dismiss();
-            }
-        });
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Select Parking Lot");
+        builder.setSingleChoiceItems(closestLotNames, -1, (DialogInterface.OnClickListener) context);
+
         selectLotDialog = builder.create();
         selectLotDialog.show();
     }
 
-    private void reportParking() {
+
+    private void changeParkingStatus(long parkingLotId) {
+        int parkingLotIndex = 0;
+
+        for (int i = 0; i < parkingLots.size(); i++) {
+            if (parkingLots.get(i).getLotId() == parkingLotId) {
+                parkingLotIndex = i;
+                break;
+            }
+        }
+
+        TextView parkButtonText = (TextView) findViewById(R.id.park_button_text);
+
+        if (parkButtonText.getText() == getString(R.string.park)) {
+            parkButtonText.setText(getString(R.string.checkout));
+            repository.updateParkingLot(parkingLotId, true);
+            parkingLots.get(parkingLotIndex).incrementCount();
+            Toast.makeText(context, getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
+        } else {
+            parkButtonText.setText(getString(R.string.park));
+            repository.updateParkingLot(parkingLotId, false);
+            parkingLots.get(parkingLotIndex).decrementCount();
+            Toast.makeText(context, R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
+        }
+
+        plotParkingLots();
+    }
+
+    private void reportParkingDialog() {
         locationTracker = new LocationTracker(context);
         if (locationTracker.canGetLocation()) {
-            double latitude = locationTracker.getLatitude();
-            double longitude = locationTracker.getLongitude();
-            TextView parkButtonText = (TextView) findViewById(R.id.park_button_text);
 
-            if (parkButtonText.getText() == getString(R.string.park)) {
-                parkButtonText.setText(getString(R.string.checkout));
-                repository.updateParkingLot(parkingLots.get(0).getLotId(), true);
-                parkingLots.get(0).incrementCount();
-
-                LatLng current_location = new LatLng(latitude, longitude);
-                findClosest(current_location);
-                Toast.makeText(context, getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
-            } else {
-                parkButtonText.setText(getString(R.string.park));
-                repository.updateParkingLot(parkingLots.get(0).getLotId(), false);
-                parkingLots.get(0).decrementCount();
-                Toast.makeText(context, R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
-            }
-
-            plotParkingLots();
+            Log.d(TAG, "Location: " + locationTracker.getLatitude() + ", " + locationTracker.getLongitude());
+            findClosest(new LatLng(locationTracker.getLatitude(), locationTracker.getLongitude()));
         } else {
             locationTracker.showEnableGpsDialog();
         }
@@ -181,7 +182,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch (view.getId()) {
             case R.id.park_button:
             case R.id.park_button_text:
-                reportParking();
+                reportParkingDialog();
                 break;
             case R.id.permit_button:
             case R.id.permit_button_text:
@@ -260,4 +261,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .icon(BitmapDescriptorFactory.defaultMarker(color)));
     }
 
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        changeParkingStatus(closestLots.get(which).getLotId());
+        selectLotDialog.dismiss();
+    }
 }
