@@ -65,7 +65,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(39.255, -76.710), 15));
 
-        SyncParkingLotsTask task = new SyncParkingLotsTask();
+        SyncParkingLotsTask task = new SyncParkingLotsTask(context);
         task.delegate = (DataReceiver) context;
         task.execute();
 

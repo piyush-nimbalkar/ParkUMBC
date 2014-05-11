@@ -1,7 +1,8 @@
 package com.example.parkumbc;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import model.ParkingLot;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +13,20 @@ import java.util.ArrayList;
 public class SyncParkingLotsTask extends AsyncTask<String, Integer, ServerResponse> {
 
     static final String TAG = "SYNC_LOTS_TASK";
+
     public DataReceiver delegate;
+    private ProgressDialog dialog;
+
+    public SyncParkingLotsTask(Context context) {
+        dialog = new ProgressDialog(context);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        this.dialog.setMessage("Loading...");
+        this.dialog.show();
+    }
 
     @Override
     protected ServerResponse doInBackground(String... params) {
@@ -40,6 +54,8 @@ public class SyncParkingLotsTask extends AsyncTask<String, Integer, ServerRespon
         }
 
         delegate.receive(parkingLots);
+        if (dialog.isShowing())
+            dialog.dismiss();
     }
 
 }
