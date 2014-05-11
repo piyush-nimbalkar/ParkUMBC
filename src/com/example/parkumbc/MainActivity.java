@@ -66,6 +66,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(39.255, -76.710), 15));
 
+        new SyncParkingLotsTask().execute();
         repository = new Repository(getApplicationContext());
         parkingLots = repository.getParkingLots();
         Log.d(TAG, "No. of parking lots: " + parkingLots.size());
@@ -98,8 +99,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             else
                 new RegisterTask(context).execute(regId);
         }
-
-        new SyncParkingLotsTask().execute();
     }
 
     private void addPolygon(ParkingLot lot, float color) {

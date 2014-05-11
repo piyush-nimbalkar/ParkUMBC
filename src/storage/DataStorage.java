@@ -127,12 +127,10 @@ public class DataStorage extends SQLiteOpenHelper {
         db.execSQL(CREATE_CORNER_TABLE);
         db.execSQL(CREATE_PERMIT_GROUP_TABLE);
         db.execSQL(CREATE_PARKING_PERMIT_TABLE);
-        create_parking_lots(db);
-        createPermitGroups(db);
-        createParkingPermits(db);
     }
 
-    public void create_parking_lots(SQLiteDatabase db) {
+    public void createParkingLots() {
+        SQLiteDatabase db = getReadableDatabase();
         List<ParkingLot> parkingLots = Seeds.getParkingLotData();
 
         for (ParkingLot lot : parkingLots) {
@@ -161,7 +159,8 @@ public class DataStorage extends SQLiteOpenHelper {
         }
     }
 
-    private void createPermitGroups(SQLiteDatabase db) {
+    public void createPermitGroups() {
+        SQLiteDatabase db = getReadableDatabase();
         List<PermitGroup> permits = Seeds.getPermitGroupData();
 
         for (PermitGroup permit : permits) {
@@ -175,7 +174,8 @@ public class DataStorage extends SQLiteOpenHelper {
         Log.d(TAG, "Permit groups created.");
     }
 
-    private void createParkingPermits(SQLiteDatabase db) {
+    public void createParkingPermits() {
+        SQLiteDatabase db = getReadableDatabase();
         long[][] parking_permit_relation = Seeds.getParkingPermitData();
 
         for (int i = 0; i < parking_permit_relation.length; i++) {
