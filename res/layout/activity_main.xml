@@ -14,7 +14,6 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="#FF8900"
         android:layout_gravity="bottom">
 
         <ImageButton
@@ -23,19 +22,17 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_weight="1"
-            android:textColor="#000000"
-            android:background="#FF8900" />
+            android:background="#222222"/>
 
         <ImageButton
             android:id="@+id/park_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="10dp"
+            android:paddingBottom="20dp"
             android:gravity="center"
             android:src="@drawable/ic_park"
             android:layout_weight="1"
-            android:background="#FF8900"
-            android:textColor="#000000" />
+            android:background="#222222"/>
 
         <ImageButton
             android:id="@+id/permit_button"
@@ -43,8 +40,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_weight="1"
-            android:background="#FF8900"
-            android:textColor="#000000" />
+            android:background="#222222"/>
 
     </LinearLayout>
 
@@ -52,7 +48,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:background="#FF8900"
+        android:layout_marginBottom="3dp"
+        android:background="#222222"
         android:layout_gravity="bottom">
 
         <TextView
@@ -61,7 +58,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_weight="1"
-            android:textColor="#000000"
+            android:textColor="#ffffff"
             android:text="@string/notify_button" />
 
         <TextView
@@ -70,7 +67,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_weight="1"
-            android:textColor="#000000"
+            android:textColor="#ffffff"
             android:text="@string/park" />
 
         <TextView
@@ -79,7 +76,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_weight="1"
-            android:textColor="#000000"
+            android:textColor="#ffffff"
             android:text="@string/permit_button" />
 
     </LinearLayout>
