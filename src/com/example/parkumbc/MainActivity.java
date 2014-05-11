@@ -179,7 +179,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             TextView parkButtonText = (TextView) findViewById(R.id.park_button_text);
 
             if (parkButtonText.getText() == getString(R.string.park)) {
-                repository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), true);
+                repository.updateParkingLot(parkingLots.get(0).getLotId(), true);
                 parkButtonText.setText(getString(R.string.checkout));
 
                 LatLng current_location = new LatLng(latitude, longitude);
@@ -187,7 +187,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 Toast.makeText(context, getString(R.string.on_park_message), Toast.LENGTH_SHORT).show();
                 current_count += 1;
             } else {
-                repository.createEntry(latitude, longitude, parkingLots.get(0).getLotId(), false);
+                repository.updateParkingLot(parkingLots.get(0).getLotId(), false);
                 parkButtonText.setText(getString(R.string.park));
                 Toast.makeText(context, R.string.on_checkout_message, Toast.LENGTH_SHORT).show();
                 current_count -= 1;

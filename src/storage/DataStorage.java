@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.google.android.gms.maps.model.LatLng;
 import android.util.Log;
-import model.Entry;
 import model.ParkingLot;
 import android.content.Context;
 import android.database.Cursor;
@@ -21,7 +20,6 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String TAG = "DATABASE";
     private static final String DB_NAME = "park_umbc.db";
 
-    private static final String TABLE_ENTRY = "entry";
     private static final String TABLE_PARKING_LOT = "parking_lot";
     private static final String TABLE_CORNER = "corner";
     private static final String TABLE_PERMIT_GROUP = "permit_group";
@@ -30,7 +28,6 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String COLUMN_PARKING_LOT_ID = "parking_lot_id";
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
-    private static final String COLUMN_IS_PARKED = "is_parked";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_CURRENT_COUNT = "current_count";
     private static final String COLUMN_CAPACITY = "capacity";
@@ -40,14 +37,6 @@ public class DataStorage extends SQLiteOpenHelper {
     private static final String COLUMN_PERMIT_GROUP_ID = "permit_group_id";
     private static final String COLUMN_PERMIT_LETTER = "letter";
     private static final String COLUMN_PERMIT_COLOR = "color";
-
-    private static final String CREATE_ENTRY_TABLE = "CREATE TABLE " +
-            TABLE_ENTRY + " (" +
-            _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMN_LATITUDE + " TEXT, " +
-            COLUMN_LONGITUDE + " TEXT, " +
-            COLUMN_PARKING_LOT_ID + " TEXT , " +
-            COLUMN_IS_PARKED + " BOOL );";
 
     private static final String CREATE_PARKING_LOT_TABLE = "CREATE TABLE " +
             TABLE_PARKING_LOT + " (" +
@@ -79,13 +68,6 @@ public class DataStorage extends SQLiteOpenHelper {
             COLUMN_PERMIT_GROUP_ID + " INTEGER, PRIMARY KEY(" +
             COLUMN_PARKING_LOT_ID + ", " +
             COLUMN_PERMIT_GROUP_ID + "));";
-
-    private static final String INSERT_ENTRY = "INSERT INTO " +
-            TABLE_ENTRY + " (" +
-            COLUMN_LATITUDE + "," +
-            COLUMN_LONGITUDE + "," +
-            COLUMN_PARKING_LOT_ID + "," +
-            COLUMN_IS_PARKED + ") VALUES (?, ?, ?, ?)";
 
     private static final String INSERT_PARKING_LOT = "INSERT INTO " +
             TABLE_PARKING_LOT + " (" +
@@ -122,7 +104,6 @@ public class DataStorage extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_ENTRY_TABLE);
         db.execSQL(CREATE_PARKING_LOT_TABLE);
         db.execSQL(CREATE_CORNER_TABLE);
         db.execSQL(CREATE_PERMIT_GROUP_TABLE);
@@ -188,16 +169,6 @@ public class DataStorage extends SQLiteOpenHelper {
             statement.executeInsert();
         }
         Log.d(TAG, "Parking - Permit Group relations created.");
-    }
-
-    public void store(Entry entry) {
-        SQLiteDatabase db = getWritableDatabase();
-        SQLiteStatement statement = db.compileStatement(INSERT_ENTRY);
-        statement.bindDouble(1, entry.getLatitude());
-        statement.bindDouble(2, entry.getLongitude());
-        statement.bindLong(3, entry.getParkingLotId());
-        statement.bindLong(4, (entry.getParkingStatus() ? 1 : 0));
-        statement.executeInsert();
     }
 
     public ArrayList<ParkingLot> getParkingLots() {
