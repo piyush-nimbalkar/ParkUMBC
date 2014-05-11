@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.util.Log;
@@ -281,6 +283,25 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 closestLots.add(value);
         }
         showDialog();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sync_lots:
+                SyncParkingLotsTask task = new SyncParkingLotsTask(context);
+                task.delegate = (DataReceiver) context;
+                task.execute();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
