@@ -116,14 +116,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 intent = new Intent(context, NotifyListActivity.class);
                 intent.putParcelableArrayListExtra(PARKING_LOTS, repository.getParkingLots());
                 startActivity(intent);
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                Set<String> lots = preferences.getStringSet(PARKING_LOTS, null);
-                if (lots != null) {
-                    String[] lotsString = lots.toArray(new String[lots.size()]);
-                    for (String s : lotsString) {
-                        Toast.makeText(context, "Selected: " + s, Toast.LENGTH_LONG).show();
-                    }
-                }
                 break;
             default:
                 break;
