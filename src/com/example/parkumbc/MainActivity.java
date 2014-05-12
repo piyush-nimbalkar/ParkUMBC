@@ -61,6 +61,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         permitGroup = getIntent().getParcelableExtra(PERMIT_GROUP);
 
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        map.getUiSettings().setZoomControlsEnabled(false);
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(39.255, -76.710), 15));
