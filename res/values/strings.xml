@@ -19,5 +19,6 @@
     <string name="notify_button">NOTIFY</string>
     <string name="permit_button">PERMIT</string>
     <string name="sync">SYNC</string>
+    <string name="parking_options_dialog_title">Select Parking Lot</string>
 
 </resources>

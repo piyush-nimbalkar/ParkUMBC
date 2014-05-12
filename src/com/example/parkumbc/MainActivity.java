@@ -159,7 +159,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             closestLotNames[i] = closestLots.get(i).getLotName();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Select Parking Lot");
+        builder.setTitle(getString(R.string.parking_options_dialog_title));
         builder.setSingleChoiceItems(closestLotNames, -1, (DialogInterface.OnClickListener) context);
 
         selectLotDialog = builder.create();
