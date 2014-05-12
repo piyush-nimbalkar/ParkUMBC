@@ -244,6 +244,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         map.addMarker(new MarkerOptions()
                 .position(lot.getMarkerPosition())
                 .title(lot.getLotName())
+                .snippet("hello world")
                 .icon(BitmapDescriptorFactory.fromResource(marker)));
     }
 
