@@ -1,7 +1,6 @@
 package com.example.parkumbc;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,27 +28,33 @@ public class PermitArrayAdapter extends ArrayAdapter<PermitGroup> {
         TextView textViewPermitName = (TextView) rowView.findViewById(R.id.textViewPermitName);
         TextView textViewPermitAbbrev = (TextView) rowView.findViewById(R.id.textViewPermitAbbrev);
         textViewPermitName.setText(values.get(position).getName());
-        textViewPermitAbbrev.setText(values.get(position).getLetter());
-        String color = values.get(position).getColor();
-        int viewColor = 0xffD9A404;
-
-        if (color.equals("red"))
-            viewColor = 0xffFA0081;
-        else if (color.equals("green"))
-            viewColor = 0xff129101;
-        else if (color.equals("yellow"))
-            viewColor = 0xffDDE324;
-        else if (color.equals("violet"))
-            viewColor = 0xffAE04D9;
-        else if (color.equals("orange"))
-            viewColor = 0xffFF8400;
-        else if (color.equals("blue"))
-            viewColor = 0xff18769E;
-        else if (color.equals("dark_green"))
-            viewColor = 0xff00BA6D;
-
-        textViewPermitAbbrev.setBackgroundColor(viewColor);
+        setPermitGroupIcon(position, textViewPermitAbbrev);
         return rowView;
+    }
+
+    private void setPermitGroupIcon(int position, TextView textViewPermitAbbrev) {
+        if (values.get(position).getLetter().equals("A"))
+            textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_a));
+        else if (values.get(position).getLetter().equals("B"))
+            textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_b));
+        else if (values.get(position).getLetter().equals("C"))
+            textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_c));
+        else if (values.get(position).getLetter().equals("D"))
+            textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_d));
+        else if (values.get(position).getLetter().equals("E"))
+            textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_e));
+        else if (values.get(position).getLetter().equals("F"))
+            textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_f));
+        else if (values.get(position).getLetter().equals("P"))
+            textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_p));
+        else if (values.get(position).getLetter().equals("PE"))
+            textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_pe));
+        else if (values.get(position).getLetter().equals("PH"))
+            textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_ph));
+        else if (values.get(position).getLetter().equals("EV"))
+            textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_ev));
+        else
+            textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_all));
     }
 
 }

@@ -24,7 +24,7 @@ public class PermitGroupActivity extends Activity implements AdapterView.OnItemC
         ListView listview = (ListView) findViewById(R.id.listViewPermitGroups);
 
         permitGroups = getIntent().getParcelableArrayListExtra(PERMIT_GROUPS);
-        permitGroups.add(0, new PermitGroup(0, "All", "*", ""));
+        permitGroups.add(0, new PermitGroup(0, getString(R.string.all_parking_lots), "", ""));
 
         final PermitArrayAdapter adapter = new PermitArrayAdapter(this, permitGroups);
         listview.setAdapter(adapter);

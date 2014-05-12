@@ -22,5 +22,6 @@
     <string name="parking_options_dialog_title">Select Parking Lot</string>
     <string name="permit_group_title">Select Parking Permit Group</string>
     <string name="notify_title">Select Parking Lot For Alerts</string>
+    <string name="all_parking_lots">All Parking Lots</string>
 
 </resources>
