@@ -16,6 +16,8 @@ import java.util.Set;
 import static com.example.parkumbc.Constant.PARKING_LOTS;
 import static com.example.parkumbc.Constant.SELECTION_COLOR;
 
+/* Generate a list of all parking lots and display them in a list view
+ */
 public class NotifyListActivity extends Activity implements AdapterView.OnItemClickListener {
 
     private ArrayList<ParkingLot> parkingLots;
@@ -33,6 +35,8 @@ public class NotifyListActivity extends Activity implements AdapterView.OnItemCl
         listview.setOnItemClickListener(this);
     }
 
+    /* On click of a parking lot, toggle the lot for subscription of notification
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);

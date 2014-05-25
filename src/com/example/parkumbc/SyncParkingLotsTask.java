@@ -10,6 +10,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+/* An asynchronous task to sync all the parking lots from the server
+ */
 public class SyncParkingLotsTask extends AsyncTask<String, Integer, ServerResponse> {
 
     static final String TAG = "SYNC_LOTS_TASK";

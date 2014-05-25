@@ -211,6 +211,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             locationTracker.removeLocationUpdates();
     }
 
+    /* Receive the data from the async task and plot the parking lots
+     */
     @Override
     public void receive(ArrayList<ParkingLot> lots) {
         repository = new Repository(context);
@@ -225,6 +227,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             addBoundary(lot);
     }
 
+    /* Draw a boundary for the given parking lot
+     */
     private void addBoundary(ParkingLot lot) {
         if (permitGroup != null && !lot.getPermitGroups().contains(permitGroup))
             return;
@@ -241,6 +245,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             addMarker(lot, R.drawable.ic_marker_green);
     }
 
+    /* Add a marker for a given parking lot
+     */
     private void addMarker(ParkingLot lot, int marker) {
         map.addMarker(new MarkerOptions()
                 .position(lot.getMarkerPosition())
@@ -259,6 +265,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return angle * RADIUS;
     }
 
+    /* Find the closest parking lot for the given co-ordinates
+     */
     private void findClosest(LatLng p) {
         TreeMap<Double, ParkingLot> closest = new TreeMap<Double, ParkingLot>();
         closestLots = new ArrayList<ParkingLot>();
@@ -284,6 +292,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return true;
     }
 
+    /* Sync the parking lots on click of the sync button on the action bar
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

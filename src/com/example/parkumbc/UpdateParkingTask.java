@@ -3,6 +3,9 @@ package com.example.parkumbc;
 import android.os.AsyncTask;
 import android.util.Log;
 
+/* An asynchronous task to update the parking lot capacity when their
+ * is either a park or checkout request
+ */
 public class UpdateParkingTask extends AsyncTask<String, Void, ServerResponse> {
 
     static final String TAG = "UPDATE_PARKING";

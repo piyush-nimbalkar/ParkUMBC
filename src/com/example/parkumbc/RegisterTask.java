@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+/* An asynchronous task to register with server for notifications
+ */
 public class RegisterTask extends AsyncTask<String, Integer, ServerResponse> {
 
     static final String TAG = "REGISTER_TASK";

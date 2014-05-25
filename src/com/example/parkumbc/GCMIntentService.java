@@ -14,6 +14,8 @@ import java.util.Set;
 
 import static com.example.parkumbc.Constant.*;
 
+/* A service to receive push messages from the GCM server
+ */
 public class GCMIntentService extends GCMBaseIntentService {
 
     static final String TAG = "SERVICE";
@@ -46,6 +48,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     }
 
+    /* On receiving a message from the GCM server, create a notification with
+     * the desired message for the user
+     */
     private void generateNotification(Context context, String lotId, String lotName) {
         String message = "No parking spaces left in " + lotName;
         String tickerText = lotName + " is full!";

@@ -1,5 +1,7 @@
 package com.example.parkumbc;
 
+/* A server response object
+ */
 public class ServerResponse {
 
     private int statusCode;

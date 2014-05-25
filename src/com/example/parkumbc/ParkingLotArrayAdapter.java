@@ -16,6 +16,8 @@ import java.util.Set;
 import static com.example.parkumbc.Constant.PARKING_LOTS;
 import static com.example.parkumbc.Constant.SELECTION_COLOR;
 
+/* An adapter to generate one view of a parking lot in the parking lot list
+ */
 public class ParkingLotArrayAdapter extends ArrayAdapter<ParkingLot> {
 
     private final Context context;

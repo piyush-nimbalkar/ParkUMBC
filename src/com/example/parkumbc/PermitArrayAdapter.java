@@ -10,6 +10,9 @@ import model.PermitGroup;
 
 import java.util.ArrayList;
 
+/* An adapter to generate one single view of a parking permit group
+ * in the permit group list
+ */
 public class PermitArrayAdapter extends ArrayAdapter<PermitGroup> {
 
     private final Context context;
@@ -32,6 +35,8 @@ public class PermitArrayAdapter extends ArrayAdapter<PermitGroup> {
         return rowView;
     }
 
+    /* Set the permit group icons according to their category
+     */
     private void setPermitGroupIcon(int position, TextView textViewPermitAbbrev) {
         if (values.get(position).getLetter().equals("A"))
             textViewPermitAbbrev.setBackground(context.getResources().getDrawable(R.drawable.ic_permit_group_a));

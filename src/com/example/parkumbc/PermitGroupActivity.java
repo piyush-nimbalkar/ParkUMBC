@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import static com.example.parkumbc.Constant.PERMIT_GROUP;
 import static com.example.parkumbc.Constant.PERMIT_GROUPS;
 
+/* Generate a list of all parking permit groups and display them in a list view
+ */
 public class PermitGroupActivity extends Activity implements AdapterView.OnItemClickListener {
 
     private ArrayList<PermitGroup> permitGroups;
@@ -31,6 +33,8 @@ public class PermitGroupActivity extends Activity implements AdapterView.OnItemC
         listview.setOnItemClickListener(this);
     }
 
+    /* On click of a permit group, return the selected value to the map
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent();

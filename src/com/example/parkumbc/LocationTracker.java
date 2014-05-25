@@ -13,6 +13,9 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 
+/* Service which takes GPS location after some interval and update
+ * the location variables which can be used by clients of this service
+ */
 public class LocationTracker extends Service implements LocationListener {
 
     private static final String TAG = "LOCATION TRACKER";
@@ -62,6 +65,8 @@ public class LocationTracker extends Service implements LocationListener {
         }
     }
 
+    /* Unsubscribe location updates from GPS
+     */
     public void removeLocationUpdates() {
         if (locationManager != null) {
             locationManager.removeUpdates(LocationTracker.this);
@@ -84,6 +89,8 @@ public class LocationTracker extends Service implements LocationListener {
         return this.canGetLocation;
     }
 
+    /* Show a dialog to enable GPS, if not enabled
+     */
     public void showEnableGpsDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setTitle(context.getString(R.string.gps_dialog_title));
